@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Token;
-import org.example.test_orm.service.AuthService;
+import org.example.test_orm.service.auth.AuthService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

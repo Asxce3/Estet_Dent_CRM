@@ -3,9 +3,8 @@ package org.example.test_orm.config;
 import lombok.RequiredArgsConstructor;
 import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Token;
-import org.example.test_orm.service.AuthService;
+import org.example.test_orm.service.auth.AuthService;
 import org.example.test_orm.util.AuthFilter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 
 @Configuration

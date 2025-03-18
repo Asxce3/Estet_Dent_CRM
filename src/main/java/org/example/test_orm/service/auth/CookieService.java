@@ -1,4 +1,4 @@
-package org.example.test_orm.service;
+package org.example.test_orm.service.auth;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
