@@ -34,3 +34,4 @@ build/
 app.log
 env.properties
 logs/
+src/main/resources/SQL/

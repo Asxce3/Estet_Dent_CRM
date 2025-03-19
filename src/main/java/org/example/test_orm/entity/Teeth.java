@@ -7,7 +7,7 @@ public class Teeth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long teethID;
+    private long ID;
 
     private String teethCondition;
 }

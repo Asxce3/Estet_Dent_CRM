@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long DocumentID;
+    private long ID;
 
 
 

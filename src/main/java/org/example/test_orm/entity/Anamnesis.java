@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Anamnesis {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long AnamnesisID;
+    private long ID;
 
 
 

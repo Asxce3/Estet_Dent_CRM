@@ -10,6 +10,7 @@ import org.example.test_orm.repository.PatientRepository;
 import org.example.test_orm.service.auth.AuthService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PatientService {
     private final AuthService authService;
+    private final MedHistoryService medHistoryService;
     private final PatientRepository patientRepository;
 
     public List<Patient> getPatients(Cookie[] cookies) {
@@ -37,12 +39,13 @@ public class PatientService {
     public List<Patient> getPatientForInputName(String name) {
         return patientRepository.findByNameStartingWith(name);
     }
-
+    @Transactional
     public void createPatient(Patient patient, Cookie[] cookies) {
         try {
             if(LocalDate.now().isAfter(patient.getBirthDate())) {
                 patient.setDoctor(getDoctorFromToken(cookies));
-                patientRepository.save(patient);
+                Patient savedPatient = patientRepository.saveAndFlush(patient); // TODO (Самвел) в будущем заменить на тригеры (это костыль)
+                medHistoryService.createMedHistoryPatient(savedPatient);
             }   else {
                 throw new CreateDataOfBirthPatientException("The patient's date of birth cannot be later than the current date.");
             }
