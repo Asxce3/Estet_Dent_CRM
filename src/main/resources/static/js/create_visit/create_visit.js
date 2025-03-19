@@ -11,9 +11,8 @@ function createTimeVisit() {
     console.log(x)
 }
 
-async function getPatients() {
-    let x = document.getElementById("name").value;а
-    await fetch("/patients/search?name=" + x)
+function getPatients(x) {
+    fetch("/patients/search?name=" + x)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Ошибка сети или сервера");
@@ -28,15 +27,15 @@ async function getPatients() {
                 let row = document.createElement("tr");
 
                 row.innerHTML = `
-                    <td>${patient.id}</td>
-                    <td>${patient.name}</td>
-                    <td>${patient.birthDate || "—"}</td>
-                    <td>${patient.telephoneNumber || "—"}</td>
-                    <td>${patient.address || "—"}</td>
-                    <td>
-                    <button data-patient = '${JSON.stringify(patient)}'class="test" onclick="insertField(this)">Выбрать</button>
-                    </td>
-                `;
+                <td>${patient.id}</td>
+                <td>${patient.name}</td>
+                <td>${patient.birthDate || "—"}</td>
+                <td>${patient.telephoneNumber || "—"}</td>
+                <td>${patient.address || "—"}</td>
+                <td>
+                <button data-patient = '${JSON.stringify(patient)}'class="test" onclick="insertField(this)">Выбрать</button>
+                </td>
+            `;
 
                 row.addEventListener("click", () => {
                     document.getElementById("name").value = patient.name;
@@ -47,4 +46,15 @@ async function getPatients() {
             })
                 .catch(err => console.error(err))
         })
+}
+
+function checkLengthName() {
+    let x = document.getElementById("name").value;
+    if(x.length > 0) {
+        getPatients(x)
+    }  else {
+        let tableBody = document.getElementById("patients-table").querySelector("tbody");
+        tableBody.innerHTML = ""; // Очищаем предыдущие результаты
+
+    }
 }

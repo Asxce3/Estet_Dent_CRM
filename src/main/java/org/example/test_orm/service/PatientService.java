@@ -1,9 +1,13 @@
 package org.example.test_orm.service;
 
+import jakarta.servlet.http.Cookie;
+import lombok.RequiredArgsConstructor;
+import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Patient;
 import org.example.test_orm.exception.CreateDataOfBirthPatientException;
 import org.example.test_orm.exception.PatientNotFoundException;
 import org.example.test_orm.repository.PatientRepository;
+import org.example.test_orm.service.auth.AuthService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +15,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @Service
+@RequiredArgsConstructor
 public class PatientService {
-
+    private final AuthService authService;
     private final PatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository) {
-        this.patientRepository = patientRepository;
-    }
-
-    public List<Patient> getPatients() {
-        return patientRepository.findAll();
+    public List<Patient> getPatients(Cookie[] cookies) {
+        Doctor doctor = getDoctorFromToken(cookies);
+        return patientRepository.findPatientsByDoctor(doctor);
     }
 
     public Patient getPatient(long id) {
@@ -32,23 +34,14 @@ public class PatientService {
         }
     }
 
-//    public void getPatientForInputName(String name) {
-//        Optional<List<Patient>> optionalPatients = patientRepository.findPatientsByName(name);
-//        if(optionalPatients.isPresent()) {
-//            List<Patient> patients = optionalPatients.get();
-//            for (Patient patient: patients) {
-//                System.out.println(patient);
-//            }
-//        }
-//    }
-
     public List<Patient> getPatientForInputName(String name) {
         return patientRepository.findByNameStartingWith(name);
     }
 
-    public void createPatient(Patient patient) {
+    public void createPatient(Patient patient, Cookie[] cookies) {
         try {
             if(LocalDate.now().isAfter(patient.getBirthDate())) {
+                patient.setDoctor(getDoctorFromToken(cookies));
                 patientRepository.save(patient);
             }   else {
                 throw new CreateDataOfBirthPatientException("The patient's date of birth cannot be later than the current date.");
@@ -63,5 +56,17 @@ public class PatientService {
         if (patientRepository.existsById(id)) {
             throw new PatientNotFoundException("Patient not deleted!");
         }
+    }
+
+    private Doctor getDoctorFromToken(Cookie[] listCookies) {
+        String token = "";
+        for(Cookie cookie: listCookies) {
+            if (cookie.getName().equals("access_token") || cookie.getName().equals("refresh_token") ) {
+                token = cookie.getValue();
+                String username = authService.parseToken(token);
+                return authService.getDoctorByLogin(username);
+            }
+        }
+        throw new RuntimeException("Не удалось получить доктора из токенов");
     }
 }

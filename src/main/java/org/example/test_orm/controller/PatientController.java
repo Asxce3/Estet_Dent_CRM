@@ -1,5 +1,7 @@
 package org.example.test_orm.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.entity.Patient;
@@ -23,8 +25,9 @@ public class PatientController {
     }
 
     @GetMapping
-    public String getAllPatients(Model model) {
-        model.addAttribute("patients", patientService.getPatients());
+    public String getAllPatients(Model model, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        model.addAttribute("patients", patientService.getPatients(cookies));
         return "patients";
     }
 
@@ -51,8 +54,9 @@ public class PatientController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute Patient patient, Model model) {
-        patientService.createPatient(patient);
+    public String create(@Valid @ModelAttribute Patient patient, Model model, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        patientService.createPatient(patient, cookies);
         model.addAttribute("patient", patient);
         return "redirect:/patients";
     }

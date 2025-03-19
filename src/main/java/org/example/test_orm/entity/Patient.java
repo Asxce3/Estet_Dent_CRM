@@ -29,7 +29,11 @@ public class Patient {
     private String telephoneNumber;
 
     @Column(nullable = false)
-    private String address;     // Адрес
+    private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "username_id", referencedColumnName = "id", nullable = false)
+    private Doctor doctor;
 
 
 //    private String gender;      // Пол

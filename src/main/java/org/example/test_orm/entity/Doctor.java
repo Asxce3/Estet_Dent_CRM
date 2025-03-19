@@ -13,6 +13,7 @@ import lombok.*;
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long doctorID;
 
     @NotBlank(message = "Name is required")
