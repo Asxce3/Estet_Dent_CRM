@@ -3,6 +3,7 @@ package org.example.test_orm.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.example.test_orm.annotation.phone.ValidPhone;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Setter
 @Getter
+@ToString
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

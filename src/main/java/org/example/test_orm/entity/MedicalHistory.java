@@ -17,9 +17,6 @@ public class MedicalHistory {
     @ManyToOne
     private Patient medicalHistoryOfClients;
 
-    @ManyToOne
-    private Doctor doctorMedicalHistory;
-
     @OneToMany
     private List<Visits> visitsOfMedicalHistory;
 

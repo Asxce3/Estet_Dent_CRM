@@ -32,6 +32,20 @@ public class PatientService {
         }
     }
 
+//    public void getPatientForInputName(String name) {
+//        Optional<List<Patient>> optionalPatients = patientRepository.findPatientsByName(name);
+//        if(optionalPatients.isPresent()) {
+//            List<Patient> patients = optionalPatients.get();
+//            for (Patient patient: patients) {
+//                System.out.println(patient);
+//            }
+//        }
+//    }
+
+    public List<Patient> getPatientForInputName(String name) {
+        return patientRepository.findByNameStartingWith(name);
+    }
+
     public void createPatient(Patient patient) {
         try {
             if(LocalDate.now().isAfter(patient.getBirthDate())) {

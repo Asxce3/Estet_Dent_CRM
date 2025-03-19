@@ -1,15 +1,19 @@
 package org.example.test_orm.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.entity.Patient;
 import org.example.test_orm.service.PatientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/patients")
+@Slf4j
 public class PatientController {
 
     private final PatientService patientService;
@@ -28,6 +32,16 @@ public class PatientController {
     public String getPatient(Model model, @PathVariable long id) {
         model.addAttribute("patient", patientService.getPatient(id));
         return "patient";
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public List<Patient> getPatientForSearchResult(Model model, @RequestParam String name) {
+        log.info("имя : {}", name);
+        List<Patient> patients = patientService.getPatientForInputName(name);
+        patients.forEach(x -> log.info("Пациент: {}", x));
+        model.addAttribute("patients", patients);
+        return patients;
     }
 
     @GetMapping("/create")

@@ -1,0 +1,50 @@
+function insertField(button) {
+    let patient = JSON.parse(button.getAttribute("data-patient"));
+    document.getElementById("name").value = patient.name;
+    document.getElementById("phone").value = patient.telephoneNumber;
+    document.getElementById("address").value = patient.address;
+    document.getElementById("date_of_birth").value = patient.birthDate
+}
+
+function createTimeVisit() {
+    let x = document.getElementById("date_of_visit").innerHTML;
+    console.log(x)
+}
+
+async function getPatients() {
+    let x = document.getElementById("name").value;а
+    await fetch("/patients/search?name=" + x)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Ошибка сети или сервера");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let tableBody = document.getElementById("patients-table").querySelector("tbody");
+            tableBody.innerHTML = ""; // Очищаем предыдущие результаты
+
+            data.forEach(patient => {
+                let row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.birthDate || "—"}</td>
+                    <td>${patient.telephoneNumber || "—"}</td>
+                    <td>${patient.address || "—"}</td>
+                    <td>
+                    <button data-patient = '${JSON.stringify(patient)}'class="test" onclick="insertField(this)">Выбрать</button>
+                    </td>
+                `;
+
+                row.addEventListener("click", () => {
+                    document.getElementById("name").value = patient.name;
+                    tableBody.innerHTML = ""; // Очищаем таблицу после выбора
+                });
+
+                tableBody.appendChild(row);
+            })
+                .catch(err => console.error(err))
+        })
+}
