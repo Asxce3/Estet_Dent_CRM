@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта лечения пациента</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+
+        #patient-info label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        #patient-info input,
+        #medical-info input,
+        #medical-info textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #treatment-log {
+            margin-top: 20px;
+        }
+
+        #add-treatment {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        #add-treatment:hover {
+            background-color: #3e8e41;
+        }
+
+        #treatments {
+            margin-top: 10px;
+        }
+
+        .treatment-entry {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .treatment-entry label {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .treatment-entry input,
+        .treatment-entry textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .treatment-entry .delete-treatment {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .treatment-entry .delete-treatment:hover {
+            background-color: #da190b;
+        }
+
+        .btn {
+            width: 20%;
+            background-color: #008CBA;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #save-card:hover {
+            background-color: #005f73;
+        }
+        
+        .card {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .bar input,
+        .bar label,
+        .bar textarea{
+            margin: 0 20px;
+        }
+
+        .right-sidebar {
+            border: 1px solid #ddd;
+            width: 45%;
+        }
+
+        .search-box{
+            width: 100%;
+        }
+
+        #medical-info {
+            margin: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 10px;
+        }
+
+        li {
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        ol {
+            display: none; /* Скрываем подсписок */
+            margin-top: 5px;
+        }
+
+        .patient_bar {
+            align-items: center;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #patient-info {
+            width: 30%;
+        }
+
+        .btn_container {
+            margin-top: 5%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Карта лечения пациента</h1>
+        <div id="patient-info">
+            <div class="patient_bar">
+                <label for="patient-name">Имя пациента:</label>
+                <span id="patient-name">Вася Пупкин</span>
+            </div>
+            <div class="patient_bar">
+                <label for="patient-birth-date">Дата рождения:</label>
+                <span id="patient-birth-date">03.12.2003</span>
+            </div>
+            <div class="patient_bar">
+                <label for="patient-telephone">Номер телефона:</label>
+                <span id="patient-telephone">+77019884492</span>
+            </div>
+        </div>
+    <div class="card">
+
+        <div id="medical-info">
+            <div class="bar">
+                <label for="diagnosis">Диагноз:</label>
+                <input type="text" id="diagnosis" placeholder="Введите диагноз">
+            </div>
+
+            <div class="bar">
+                <label for="complaints">Жалобы:</label>
+                <textarea id="complaints" placeholder="Введите жалобы" rows="2"></textarea>
+            </div>
+
+            <div class="bar">
+                <label for="anamnesis">Анамнез:</label>
+                <textarea id="anamnesis" placeholder="Введите анамнез" rows="3"></textarea>
+            </div>
+
+            <div class="bar">
+                <label for="objective">Объективное:</label>
+                <textarea id="objective" placeholder="Объективные данные" rows="3"></textarea>
+            </div>
+
+            <div class="bar">
+                <label for="treatment">Лечение:</label>
+                <textarea id="treatment" placeholder="Введите детали лечения" rows="4"></textarea>
+            </div>
+
+            <div class="bar">
+                <label for="recommendations">Рекомендации:</label>
+                <textarea id="recommendations" placeholder="Введите рекомендации" rows="3"></textarea>
+            </div>
+
+
+            <div class="bar">
+                <label for="allergies">Аллергические реакции:</label>
+                <input type="text" id="allergies" placeholder="Введите информацию об аллергиях">
+
+            </div>
+
+            <div class="bar">
+                <label for="botkin">Болезнь Боткина:</label>
+                <input type="text" id="botkin" placeholder="Введите информацию о болезни Боткина">
+            </div>
+
+        </div>
+
+        <div class="right-sidebar">
+            <div class="lists-container">
+                <ul>
+                    <li onclick="toggleList(this)">Утро
+                        <ol>
+                            <li>Зарядка</li>
+                            <li>Завтрак</li>
+                            <li>Созвон с командой</li>
+                        </ol>
+                    </li>
+                    <li onclick="toggleList(this)">День
+                        <ol>
+                            <li>Прогулка</li>
+                            <li>Обед</li>
+                        </ol>
+                    </li>
+                    <li onclick="toggleList(this)">Вечер
+                        <ol>
+                            <li>Чтение</li>
+                            <li>Ужин</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="btn_container">
+        <button id="back-btn" class="btn">Вернутся</button>
+        <button id="print-btn" class="btn">Распечатать</button>
+        <button id="save-btn" class="btn">Сохранить карту</button>
+    </div>
+
+</div>
+<script>
+    function toggleList(element) {
+        let sublist = element.querySelector("ol");
+        if (sublist) {
+            sublist.style.display = (sublist.style.display === "none" || sublist.style.display === "") ? "block" : "none";
+        }
+    }
+</script>
+</body>
+</html>
