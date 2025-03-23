@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контекстное меню</title>
+    <style>
+        /* Стили для контекстного меню */
+        .context-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            padding: 5px 0;
+            z-index: 1000;
+        }
+
+        .context-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .context-menu li {
+            padding: 8px 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .context-menu li:hover {
+            background: #f0f0f0;
+        }
+        .box {
+            background: #3b82f6;
+            padding: 100px;
+            margin: 10px;
+        }
+        .box-menu {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div class = "box-menu">
+    <div class="box" id = "1"></div>
+    <div class="box" id = "2"></div>
+</div>
+
+<div id="contextMenu" class="context-menu">
+    <ul>
+        <li id="editRecord">Изменить запись</li>
+        <li id="deleteRecord">Удалить запись</li>
+    </ul>
+</div>
+
+<script>
+    function myFunction() {
+        let contextMenu = document.getElementById('contextMenu');
+        contextMenu.style.display = "block"
+    }
+    function hideMenu() {
+        document.getElementById('contextMenu').style.display = "none";
+    }
+    let box = document.getElementById("2")
+    box.addEventListener("mousemove", myFunction, true)
+    box.addEventListener("mouseleave", hideMenu); // Скрывает меню при уходе мыши
+
+</script>
+
+</body>
+</html>

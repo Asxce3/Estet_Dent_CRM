@@ -48,7 +48,7 @@ public class SecurityConfig {
                             Token token = authService.createTokenByDoctor(doctor);
                             authService.saveToken(token);
                             authService.setAuthCookies(response, token);
-                            response.sendRedirect(request.getContextPath() + "/patients");
+                            response.sendRedirect(request.getContextPath() + "/visits");
                         })
                         .failureUrl("/login?error_message=true").permitAll()
                 )

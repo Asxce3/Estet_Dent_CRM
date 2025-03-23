@@ -4,11 +4,35 @@ function insertField(button) {
     document.getElementById("phone").value = patient.telephoneNumber;
     document.getElementById("address").value = patient.address;
     document.getElementById("date_of_birth").value = patient.birthDate
+    getListMedHistory(patient)
 }
 
-function createTimeVisit() {
-    let x = document.getElementById("date_of_visit").innerHTML;
-    console.log(x)
+async function getListMedHistory(patient) {
+    try {
+        const response = await fetch("/history?id=" + patient.id, {
+            method : "GET",
+        })
+        if(response.ok) {
+            console.log(response.ok)
+            const listOfMedHistories = await response.json();
+            createSelect(listOfMedHistories)
+        }
+    }   catch (e) {
+        console.error("Error: ", e)
+    }
+
+}
+function createSelect(listOfMedHistories){
+    let select = document.getElementById("patientSelect");
+    select.innerHTML = '<option value="">Выберите мед историю</option>'; // Очищаем и добавляем дефолтный вариант
+
+    listOfMedHistories.forEach(history => {
+        console.log(history)
+        let option = document.createElement("option");
+        option.value = history.id;
+        option.textContent = history.id;
+        select.appendChild(option);
+    });
 }
 
 function getPatients(x) {

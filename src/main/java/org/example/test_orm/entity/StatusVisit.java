@@ -4,4 +4,5 @@ public enum StatusVisit {
     COMPLETED, // Заверенный
     CANCELLED, // Отмененный
     POSTPONED, // Перенесенный
+    CREATED, // Созданный
 }

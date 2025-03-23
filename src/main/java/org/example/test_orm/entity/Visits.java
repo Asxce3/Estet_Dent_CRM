@@ -1,8 +1,7 @@
 package org.example.test_orm.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +10,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Visits {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class Visits {
     private String complaint;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusVisit statusVisit;
 
     @OneToMany
@@ -43,5 +47,6 @@ public class Visits {
 
     @Column(nullable = false)
     private LocalDate dateOfVisit;
+
 
 }

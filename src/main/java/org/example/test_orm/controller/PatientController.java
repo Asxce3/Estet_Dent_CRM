@@ -61,10 +61,11 @@ public class PatientController {
         return "redirect:/patients";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable long id) {
+    @GetMapping("/delete/{id}")     //(TODO) В будущем заменить на delete / 23.03 возникает ошибка
+    public String delete(@PathVariable long id, HttpServletRequest request) {
+        System.out.println(request.getMethod());
         patientService.deletePatient(id);
-        return "patients";
+        return "redirect:/patients";
     }
 
 }

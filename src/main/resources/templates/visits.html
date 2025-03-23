@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Schedule</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 95%;
+            max-width: 1100px;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 25px;
+            font-size: 2.4em;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .day-header {
+            background-color: #e9ecef;
+            padding: 14px;
+            font-weight: bold;
+            color: #495057;
+            border-radius: 6px;
+        }
+
+        .day-column {
+            background-color: #ffffff;
+            padding: 14px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+
+        .week-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        button:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .visit {
+            background-color: #d6e4ee;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .manipulate-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${startDate} + ' - ' + ${endDate}"></h1>
+    <div class="week-control">
+        <a th:href="@{/visits(inputWeek=${startDate.minusDays(7)})}"><button id="prevWeekBtn">&lt; Предыдущая неделя</button></a>
+        <a th:href="@{/visits(inputWeek=${startDate.plusDays(7)})}"><button id="nextWeekBtn">Следующая неделя &gt;</button></a>
+    </div>
+    <div class="schedule-grid">
+
+        <div class="day-header">ПН <span id="MONDAY"></span></div>
+        <div class="day-header">ВТ <span id="TUESDAY"></span></div>
+        <div class="day-header">СР <span id="WEDNESDAY"></span></div>
+        <div class="day-header">ЧТ <span id="THURSDAY"></span></div>
+        <div class="day-header">ПТ <span id="FRIDAY"></span></div>
+        <div class="day-header">СБ <span id="SATURDAY"></span></div>
+        <div class="day-header">ВС <span id="SUNDAY"></span></div>
+
+        <div class="visit_container" th:each="day : ${daysOfWeek}">
+            <div class="visit" th:id="${visit.getID()}" th:each="visit : ${visits}" th:if="${day == visit.dateOfVisit.getDayOfWeek()}">
+                <p th:text="${visit.patient.name}"></p>
+                <p th:text="${visit.complaint}"></p>
+                <p th:text="${visit.startVisit} + ' - ' + ${visit.finishVisit}"></p>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/visits/create}"><button id="addVisitBtn">Добавить визит</button></a>
+    <div id = "manipulate-btn"  class="manipulate-btn">
+        <button id="editVisitBtn">Изменить визит</button>
+        <button id="deleteVisitBtn">Удалить визит</button>
+    </div>
+
+
+</div>
+<script>
+    document.querySelectorAll(".visit").forEach(item => {
+        item.addEventListener("click", (event) => {
+            let manipulateButtons = document.getElementById("manipulate-btn")
+            manipulateButtons.style.display = "block";
+            let id = item.id
+
+            let deleteVisitBtn = document.getElementById("deleteVisitBtn");
+            deleteVisitBtn.addEventListener("click", () => {
+                fetch('/visits/delete/' + id, {
+                    method: "GET",
+                }).then(() => {
+                    window.location.href = "/visits";
+                })
+            })
+
+            let editVisitBtn = document.getElementById("editVisitBtn");
+            editVisitBtn.addEventListener("click", () => {
+                window.location.href = "/visits/update/" + id;
+            })
+        })
+    })
+
+</script>
+</body>
+</html>

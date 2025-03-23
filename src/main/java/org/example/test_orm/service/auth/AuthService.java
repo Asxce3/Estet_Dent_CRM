@@ -1,6 +1,7 @@
 package org.example.test_orm.service.auth;
 
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Slf4j
@@ -60,6 +59,7 @@ public class AuthService implements UserDetailsService{
     }
 
     public void saveToken(Token token) {
+        log.info("Отправка на сохранение сгенерировано токена из securityConfig: {}", token);
         tokenRepository.save(token);
     }
 
@@ -71,7 +71,9 @@ public class AuthService implements UserDetailsService{
             for (Token token: optionalTokens.get()) {
                 if(token.getRefreshToken().equals(refreshToken)) {
                     tokenRepository.delete(token);
+                    log.info("Удаление старого токена из AuthFilter: {}", token);
                     Token newToken = createTokenByDoctor(doctor);
+                    log.info("Создание нового токена без сохранения из AuthFilter: {}", newToken);
                     tokenRepository.save(newToken);
                     return newToken;
                 }
@@ -100,5 +102,16 @@ public class AuthService implements UserDetailsService{
             throw new UsernameNotFoundException("Доктор не найден");
         }
         return optionalDoctor.get();
+    }
+
+    public Doctor getDoctorFromCookie(Cookie[] listOfCookies) {
+        for(Cookie cookie: listOfCookies) {
+            if(cookie.getName().equals("refresh_token")) {
+                return getDoctorByLogin(parseToken(cookie.getValue()));
+            }
+        }
+        String errorMessage = "Не удалось найти доктора";
+        log.info(errorMessage);
+        throw new RuntimeException(errorMessage);
     }
 }
