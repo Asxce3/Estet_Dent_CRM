@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.example.test_orm.annotation.phone.ValidPhone;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -34,6 +35,10 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "username_id", referencedColumnName = "id", nullable = false)
     private Doctor doctor;
+
+    // Добавляем обратную связь с MedicalHistory
+    @OneToMany(mappedBy = "medicalHistoryOfClients", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicalHistory> medicalHistories;
 
 
 //    private String gender;      // Пол

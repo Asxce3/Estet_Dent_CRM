@@ -41,14 +41,18 @@ public class AuthController {
     public String registration(@Valid Doctor doctor,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasErrors()) {
-            authService.saveDoctor(doctor);
-            return "redirect:/login";
-        }   else {
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/register";
         }
 
+        if (authService.isLoginTaken(doctor.getLogin())) {
+            redirectAttributes.addFlashAttribute("error", "Логин уже используется");
+            return "redirect:/register";
+        }
 
+        authService.saveDoctor(doctor);
+        redirectAttributes.addFlashAttribute("message", "Регистрация прошла успешно, войдите в систему");
+        return "redirect:/login"; //todo нужно доделать фронт, чтобы он отобразил ошибки
     }
 }

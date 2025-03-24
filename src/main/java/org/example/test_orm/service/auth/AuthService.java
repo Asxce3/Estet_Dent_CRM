@@ -114,4 +114,13 @@ public class AuthService implements UserDetailsService{
         log.info(errorMessage);
         throw new RuntimeException(errorMessage);
     }
+
+
+    public List<Doctor> getAll(){
+        return doctorRepository.findAll();
+    }
+
+    public boolean isLoginTaken(String login){
+        return doctorRepository.findDoctorByLogin(login).isPresent();
+    }
 }

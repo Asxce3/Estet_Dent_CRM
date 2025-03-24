@@ -27,6 +27,10 @@ public class PatientService {
         return patientRepository.findPatientsByDoctor(doctor);
     }
 
+    public List<Patient> getPatients() {        // Тестово
+        return patientRepository.findAll();
+    }
+
     public Patient getPatient(long id) {
         Optional<Patient> optPatient = patientRepository.findById(id);
         if(optPatient.isPresent()) {
