@@ -3,7 +3,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание истории пациента</title>
-    <link rel="stylesheet" href="/css/history/history.css">
+<!--    <link rel="stylesheet" href="/css/history/history.css">-->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .error-container {
+            color: #d9534f;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: left;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -11,36 +87,14 @@
 
     <div id="errors" class="error-container"></div>
 
-    <form id="historyForm" method="post" th:action="@{/history/create/{id}(id=${patientId})}">
-        <input type="hidden" name="medicalHistoryOfClients" id="patient" th:value="${patientId}">
-
-        <div class="form-group">
-            <label for="doctor">Выберите доктора</label>
-            <select name="doctorMedicalHistory" id="doctor" required>
-                <option value="">-- Выберите доктора --</option>
-                <option th:each="doctor : ${doctors}"
-                        th:value="${doctor.doctorID}"
-                        th:text="${doctor.name}"></option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="complaints">Причина обращения</label>
-            <input type="text" name="complaints" id="complaints" required>
-        </div>
-
-        <div class="form-group">
-            <label for="date">Дата</label>
-            <input type="date" name="date" id="date" required th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-        </div>
-
-        <div class="button-group">
-            <button type="submit" class="btn-submit">Создать</button>
-            <button type="button" class="btn-cancel" id="cancelButton">Отмена</button>
-        </div>
+    <form id="historyForm" method="post" th:action="@{/history/create}" th:object="${med_history}">
+        <input type="hidden" th:field="*{patientId}">
+        <label for="medHistory">Назовите мед историю:</label>
+        <input type="text" name="medHistory" id="medHistory"  th:field="*{name}">
+        <button type="submit">Сохранить</button>
     </form>
 </div>
 
-<script type="module" th:src="@{/js/history/create_script.js}"></script>
+<!--<script type="module" th:src="@{/js/history/create_script.js}"></script>-->
 </body>
 </html>

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface VisitsRepository extends JpaRepository<Visits, Long> {
+    List<Visits> findVisitsByPatientID(long patient_id);
     List<Visits> findByPatientDoctorAndDateOfVisitBetween(Doctor doctor, LocalDate startWeek, LocalDate finishWeek);
     List<Visits> findByPatientDoctorAndDateOfVisitBetweenAndStatusVisit(Doctor doctor, LocalDate startWeek, LocalDate finishWeek, StatusVisit statusVisit);
 

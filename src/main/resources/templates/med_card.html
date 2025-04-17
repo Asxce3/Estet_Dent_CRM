@@ -12,6 +12,10 @@
             background-color: #f4f4f4;
         }
 
+        a {
+            text-decoration: none;
+        }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -22,8 +26,6 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-
 
         #patient-info label {
             display: block;
@@ -42,67 +44,7 @@
             box-sizing: border-box;
         }
 
-        #treatment-log {
-            margin-top: 20px;
-        }
-
-        #add-treatment {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        #add-treatment:hover {
-            background-color: #3e8e41;
-        }
-
-        #treatments {
-            margin-top: 10px;
-        }
-
-        .treatment-entry {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-
-        .treatment-entry label {
-            display: block;
-            margin-top: 5px;
-        }
-
-        .treatment-entry input,
-        .treatment-entry textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .treatment-entry .delete-treatment {
-            background-color: #f44336;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .treatment-entry .delete-treatment:hover {
-            background-color: #da190b;
-        }
-
         .btn {
-            width: 20%;
             background-color: #008CBA;
             color: white;
             padding: 12px 20px;
@@ -113,19 +55,11 @@
             margin-top: 20px;
         }
 
-        #save-card:hover {
-            background-color: #005f73;
-        }
-        
         .card {
             display: flex;
-            justify-content: space-between;
+            /*justify-content: space-between;*/
         }
 
-        .bar {
-            display: flex;
-            align-items: center;
-        }
 
         .bar input,
         .bar label,
@@ -138,28 +72,13 @@
             width: 45%;
         }
 
-        .search-box{
-            width: 100%;
-        }
 
         #medical-info {
-            margin: 30px;
+            margin-top: 30px;
+            margin-right: 20%;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 10px;
-        }
 
-        li {
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        ol {
-            display: none; /* Скрываем подсписок */
-            margin-top: 5px;
-        }
 
         .patient_bar {
             align-items: center;
@@ -178,34 +97,70 @@
             justify-content: space-between;
         }
 
-        .teeth img{
-            width: 100%;
+        .teeth_container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         .teeth {
-            width: 10%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            /*height: 40%; !* Половина высоты *!*/
         }
 
-        .teeth_column {
-            width: 10%;
+        /* Размещение в четвертях */
+        .teeth:nth-child(1) { align-self: flex-start; } /* Верхний левый */
+        .teeth:nth-child(2) { align-self: flex-start; } /* Верхний правый */
+        .teeth:nth-child(3) { align-self: flex-end; } /* Нижний левый */
+        .teeth:nth-child(4) { align-self: flex-end; } /* Нижний правый */
+
+        .teeth img {
+            cursor: pointer; /* Курсор в виде указателя */
+            margin: 0 auto;
+            width: 50px;
+            height: auto;
         }
 
+        .teeth img.clicked {
+            background-color: rgba(167, 35, 163, 0.5);
+            background-blend-mode: multiply;
+        }
 
+        .teeth:nth-child(4) { grid-column: 2; grid-row: 2; } /* Нижний правый */
 
-        /*.teeth_column {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-
-        /*}*/
-
-
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .folder {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        li { font-weight: normal; cursor: pointer; }
     </style>
 </head>
 <body>
-<div class="container">
+<form class="container" method="POST"  id="upload-form" enctype="multipart/form-data" th:action="@{/med_card}" th:object="${med_card}">
+    <h1>Зубы пациента</h1>
     <div class="teeth_container">
-        <div class="teeth_column">
-            <div class="teeth first">
+        <div class="teeth 1" >
+            <img  src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+        </div>
+        <div class="teeth 2">
             <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
             <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
             <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
@@ -215,146 +170,104 @@
             <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
             <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
         </div>
-            <div class="teeth second">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            </div>
+        <div class="teeth 3">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
         </div>
-        <div class="teeth_column">
-            <div class="teeth third">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            </div>
-            <div class="teeth four">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-                <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            </div>
+        <div class="teeth 4">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
         </div>
-
     </div>
 
-
-
-    <h1>Карта лечения пациента</h1>
-        <div id="patient-info">
-            <div class="patient_bar">
-                <label for="patient-name">Имя пациента:</label>
-                <span id="patient-name">Вася Пупкин</span>
-            </div>
-            <div class="patient_bar">
-                <label for="patient-birth-date">Дата рождения:</label>
-                <span id="patient-birth-date">03.12.2003</span>
-            </div>
-            <div class="patient_bar">
-                <label for="patient-telephone">Номер телефона:</label>
-                <span id="patient-telephone">+77019884492</span>
-            </div>
+    <div id="patient-info">
+        <input type="hidden" th:field="*{visits}">
+        <h1>Карта лечения пациента</h1>
+        <div class="patient_bar">
+            <label for="patient-name">Имя пациента:</label>
+            <span id="patient-name" th:text="${med_card.visits.patient.name}">Вася Пупкин</span>
         </div>
-    <div class="card">
-
+        <div class="patient_bar">
+            <label for="patient-birth-date">Дата рождения:</label>
+            <span id="patient-birth-date" th:text="${med_card.visits.patient.birthDate}">03.12.2003</span>
+        </div>
+        <div class="patient_bar">
+            <label for="patient-telephone">Номер телефона:</label>
+            <span id="patient-telephone" th:text="${med_card.visits.patient.telephoneNumber}">+77019884492</span>
+        </div>
+    </div>
+    <div class="card" >
         <div id="medical-info">
             <div class="bar">
                 <label for="diagnosis">Диагноз:</label>
-                <input type="text" id="diagnosis" placeholder="Введите диагноз">
+                <textarea type="text" id="diagnosis" placeholder="Введите диагноз" th:field="*{diagnosis}"></textarea>
             </div>
 
             <div class="bar">
                 <label for="complaints">Жалобы:</label>
-                <textarea id="complaints" placeholder="Введите жалобы" rows="2"></textarea>
+                <textarea id="complaints" placeholder="Введите жалобы" rows="2" th:field="*{complaints}"></textarea>
             </div>
 
             <div class="bar">
                 <label for="anamnesis">Анамнез:</label>
-                <textarea id="anamnesis" placeholder="Введите анамнез" rows="3"></textarea>
+                <textarea id="anamnesis" placeholder="Введите анамнез" rows="3" th:field="*{anamnesis}"></textarea>
             </div>
 
             <div class="bar">
-                <label for="objective">Объективное:</label>
-                <textarea id="objective" placeholder="Объективные данные" rows="3"></textarea>
+                <label for="objective">Объективно:</label>
+                <textarea id="objective" placeholder="Объективные данные" rows="3" th:field="*{objective}"></textarea>
             </div>
 
             <div class="bar">
                 <label for="treatment">Лечение:</label>
-                <textarea id="treatment" placeholder="Введите детали лечения" rows="4"></textarea>
+                <textarea id="treatment" placeholder="Введите детали лечения" rows="4" th:field="*{treatment}"></textarea>
             </div>
 
             <div class="bar">
                 <label for="recommendations">Рекомендации:</label>
-                <textarea id="recommendations" placeholder="Введите рекомендации" rows="3"></textarea>
+                <textarea id="recommendations" placeholder="Введите рекомендации" rows="3" th:field="*{recommendations}"></textarea>
             </div>
 
 
             <div class="bar">
                 <label for="allergies">Аллергические реакции:</label>
-                <input type="text" id="allergies" placeholder="Введите информацию об аллергиях">
+                <textarea type="text" id="allergies" placeholder="Введите информацию об аллергиях" th:field="*{allergies}"></textarea>
 
             </div>
 
             <div class="bar">
                 <label for="botkin">Болезнь Боткина:</label>
-                <input type="text" id="botkin" placeholder="Введите информацию о болезни Боткина">
+                <textarea type="text" id="botkin" placeholder="Введите информацию о болезни Боткина" th:field="*{botkin}"></textarea>
             </div>
-
         </div>
-
         <div class="right-sidebar">
-            <div class="lists-container">
-                <ul>
-                    <li onclick="toggleList(this)">Утро
-                        <ol>
-                            <li>Зарядка</li>
-                            <li>Завтрак</li>
-                            <li>Созвон с командой</li>
-                        </ol>
-                    </li>
-                    <li onclick="toggleList(this)">День
-                        <ol>
-                            <li>Прогулка</li>
-                            <li>Обед</li>
-                        </ol>
-                    </li>
-                    <li onclick="toggleList(this)">Вечер
-                        <ol>
-                            <li>Чтение</li>
-                            <li>Ужин</li>
-                        </ol>
-                    </li>
-                </ul>
-            </div>
+            <h2>Структура директорий</h2>
+            <div id="tree"></div>
+
         </div>
     </div>
-    <div class="btn_container">
-        <button id="back-btn" class="btn">Вернутся</button>
-        <button id="print-btn" class="btn">Распечатать</button>
-        <button id="save-btn" class="btn">Сохранить карту</button>
-    </div>
 
-</div>
-<script>
-    function toggleList(element) {
-        let sublist = element.querySelector("ol");
-        if (sublist) {
-            sublist.style.display = (sublist.style.display === "none" || sublist.style.display === "") ? "block" : "none";
-        }
-    }
-</script>
+    <div class="btn_container">
+        <a th:href="@{/patients/{id}(id=${med_card.visits.patient.ID})}" id="back-btn" class="btn"> Вернутся
+        </a>
+        <button id="save-btn" class="btn" type="submit">Сохранить карту</button>
+    </div>
+<!--    <input type="file" name="files[]" onchange="addFileInput(this)">-->
+</form>
+
+<script th:src="@{/js/med_card/Auto_filling_fields.js}"></script>
+
 </body>
 </html>

@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import javax.print.Doc;
 import java.math.BigDecimal;
 
 @Entity
@@ -30,6 +31,9 @@ public class Material {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Производитель не должен быть null")
     private Producer producer;
+
+    @ManyToOne
+    private Doctor doctor;
 
     @NotNull(message = "Количество материала не должно быть пустым")
     private Integer count;

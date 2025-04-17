@@ -22,6 +22,10 @@ public class VisitsService {
     private final MedHistoryRepository medHistoryRepository;
     private final CheckDate checkDate = new CheckDate();
 
+    public List<Visits> getPatientVisits(long patientId) {
+        return visitsRepository.findVisitsByPatientID(patientId);
+    }
+
     public List<Visits> getVisits(LocalDate startWeek, Doctor doctor) {
         return visitsRepository.
                 findByPatientDoctorAndDateOfVisitBetweenAndStatusVisit
@@ -90,6 +94,7 @@ public class VisitsService {
                 );
                 log.info("Создание визита");
             }
+            log.info("Не удалось сохранить визит");
         }   catch (DataIntegrityViolationException e) {
             log.warn("Не удалось создать запись Visits", e);
             throw new DataIntegrityViolationException("Не удалось создать запись Visits", e);

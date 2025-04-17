@@ -1,13 +1,16 @@
 package org.example.test_orm.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Material;
 import org.example.test_orm.entity.Producer;
 import org.example.test_orm.repository.MaterialsRepository;
 import org.example.test_orm.repository.ProducerRepository;
 import org.example.test_orm.service.MaterialService;
 import org.example.test_orm.service.ProducerService;
+import org.example.test_orm.service.auth.AuthService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +25,7 @@ import java.util.Optional;
 @RequestMapping("/materials")
 @RequiredArgsConstructor
 public class MaterialController {
+    private final AuthService authService;
     private final MaterialService materialService;
     private final ProducerService producerService;
     private final ProducerRepository producerRepository;
@@ -36,6 +40,7 @@ public class MaterialController {
 
     @GetMapping("/create")
     public String createMaterialPage(Model model) {
+        model.addAttribute("material", new Material());
         model.addAttribute("producers", producerService.getAllProducers());
         return "inventory/create";
     }
@@ -43,12 +48,13 @@ public class MaterialController {
     @PostMapping("/create")
     public String createMaterial(@Valid Material material,
                                  BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/materials/create";
         }
-
+        Doctor doctor = authService.getDoctorFromCookie(request.getCookies());
+        material.setDoctor(doctor);
         materialService.create(material);
         return "redirect:/materials";
     }

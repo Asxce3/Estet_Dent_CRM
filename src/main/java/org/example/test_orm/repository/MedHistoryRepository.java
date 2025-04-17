@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MedHistoryRepository extends JpaRepository<MedHistory, Long> {
     List<MedHistory> getMedHistoriesByPatient_ID(long id);
+    Optional<MedHistory> findByPatientID(long patientId);
 }

@@ -2,6 +2,7 @@ package org.example.test_orm.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Material;
 import org.example.test_orm.repository.MaterialsRepository;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,10 @@ public class MaterialService {
     public List<Material> getAllMaterials() {
         return materialsRepository.findAllWithProducers();
     }
+
+//    public List<Material> getAllMaterials() {
+//        return materialsRepository.findAllWithProducers();
+//    }
 
     public void copyMaterialProperties(Material material, Material newMaterial) {
         newMaterial.setName(material.getName());

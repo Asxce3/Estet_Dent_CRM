@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дневник пациента</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        .container {
+            width: 60%;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 6px;
+            text-align: left;
+            vertical-align: top;
+            overflow-wrap: break-word;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-style: italic;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <table>
+        <tr>
+            <th colspan="2" class="bold">ДНЕВНИК: жалобы, анамнез, объективные данные, диагноз, лечение и рекомендации</th>
+        </tr>
+        <tr>
+            <td class="bold">Жалобы:</td>
+            <td th:text="${med_card.complaints}">44-46: Жалобы на нарушение дикции.</td>
+        </tr>
+        <tr>
+            <td class="bold">Анамнез:</td>
+            <td  th:text="${med_card.anamnesis}">44-46: Ранее проведена костная пластика справа нижней челюсти.</td>
+        </tr>
+        <tr>
+            <td class="bold">Объективные данные:</td>
+            <td  th:text="${med_card.objective}">44-46:</td>
+        </tr>
+        <tr>
+            <td class="bold">Диагноз:</td>
+            <td  th:text="${med_card.diagnosis}">44-46: Частичная первичная адентия зубов</td>
+        </tr>
+        <tr>
+            <td class="bold">Лечение</td>
+            <td  th:text="${med_card.treatment}">44-46:</td>
+        </tr>
+        <tr>
+            <td class="bold">Рекомендации</td>
+            <td th:text="${med_card.recommendations}">44-46:</td>
+        </tr>
+    </table>
+    <div class="footer">
+        <span  th:text="${med_card.visits.dateOfVisit}">15.03.2023</span>
+        <span>Врач: _____________ / Аманжолов Данияр /</span>
+    </div>
+</div>
+<script>
+    window.print();
+</script>
+</body>
+</html>
+
+
+

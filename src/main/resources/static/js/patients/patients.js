@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Delete user function with confirmation
     window.deleteUser = function(id) {
         if (confirm('Вы уверены, что хотите удалить этого пациента?')) {
-            fetch(`/patients/${id}`, {
-                method: 'POST'
+            fetch(`/patients/delete/${id}`, {
+                method: 'GET'
             })
                 .then(response => {
                     if (response.ok) {

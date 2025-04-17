@@ -9,7 +9,7 @@ function insertField(button) {
 
 async function getListMedHistory(patient) {
     try {
-        const response = await fetch("/history?id=" + patient.id, {
+        const response = await fetch("/history/" + patient.id, {
             method : "GET",
         })
         if(response.ok) {
@@ -30,7 +30,7 @@ function createSelect(listOfMedHistories){
         console.log(history)
         let option = document.createElement("option");
         option.value = history.id;
-        option.textContent = history.id;
+        option.textContent = history.name;
         select.appendChild(option);
     });
 }

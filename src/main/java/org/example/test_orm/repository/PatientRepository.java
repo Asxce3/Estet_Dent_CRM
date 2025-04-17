@@ -10,4 +10,5 @@ import java.util.List;
 public interface PatientRepository extends JpaRepository<Patient, Long> {
     List<Patient> findPatientsByDoctor(Doctor doctor);
     List<Patient> findByNameStartingWith(String name);
+    List<Patient> findByNameStartingWithAndDoctor(String name, Doctor doctor);
 }

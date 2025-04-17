@@ -106,7 +106,7 @@ public class AuthService implements UserDetailsService{
 
     public Doctor getDoctorFromCookie(Cookie[] listOfCookies) {
         for(Cookie cookie: listOfCookies) {
-            if(cookie.getName().equals("refresh_token")) {
+            if(cookie.getName().equals("access_token") || cookie.getName().equals("refresh_token")){
                 return getDoctorByLogin(parseToken(cookie.getValue()));
             }
         }

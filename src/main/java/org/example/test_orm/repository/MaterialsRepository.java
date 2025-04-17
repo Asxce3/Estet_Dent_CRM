@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface MaterialsRepository extends JpaRepository<Material, Long> {
 
+
     @Query("select m from Material m join fetch m.producer p where lower(m.name) like lower(:name)")
     List<Material> findMaterialsByName(String name);
 

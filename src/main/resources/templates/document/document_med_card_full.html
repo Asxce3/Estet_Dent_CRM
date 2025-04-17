@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Медицинская карта</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            width: 800px;
+            margin: auto;
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .header {
+            display: grid;
+            grid-template-columns: 2fr 3fr;
+            border: 1px solid black;
+        }
+        .header div {
+            padding: 10px;
+            border-right: 1px solid black;
+        }
+        .header div:last-child {
+            border-right: none;
+        }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .input-field {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid black;
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .row label {
+            flex: 1;
+        }
+        .row input {
+            flex: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <p><strong>Наименование организации</strong></p>
+                <p>Демо</p>
+            </div>
+            <div>
+                <p><strong>Медицинская документация</strong></p>
+                <p>Форма № 058/у</p>
+            </div>
+        </div>
+
+        <h2 class="title">Стоматологиялық науқастың медициналық картасы<br>Медицинская карта стоматологического пациента</h2>
+
+        <div class="row">
+            <label>№</label>
+            <input class="input-field" type="text">
+            <label>Дата заполнения:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.dateOfVisit.getDayOfWeek()}">
+            <input class="input-field" type="text" th:value="${med_card.visits.dateOfVisit.getMonth()}">
+            <input class="input-field" type="text" th:value="${med_card.visits.dateOfVisit.getYear()}">
+        </div>
+
+        <div class="row">
+            <label>Фамилия, имя, отчество:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.patient.name}">
+        </div>
+
+        <div class="row">
+            <label>Дата рождения:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.patient.birthDate}">
+        </div>
+
+<!--        <div class="row">-->
+<!--            <label>Пол:</label>-->
+<!--            <input class="input-field" type="text" th:value="${med_card.visits.patient.name}">-->
+<!--        </div>-->
+
+        <div class="row">
+            <label>Адрес:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.patient.address}">
+        </div>
+
+<!--        <div class="row">-->
+<!--            <label>Место работы/учёбы:</label>-->
+<!--            <input class="input-field" type="text">-->
+<!--        </div>-->
+
+        <div class="row">
+            <label>Диагноз:</label>
+            <input class="input-field" type="text" th:value="${med_card.diagnosis}">
+        </div>
+
+        <div class="row">
+            <label>Жалобы:</label>
+            <input class="input-field" type="text" th:value="${med_card.complaints}">
+        </div>
+
+        <div class="row">
+            <label>Перенесенные и сопутствующие заболевания:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.patient.name}">
+        </div>
+
+        <div class="row">
+            <label>Развитие настоящего заболевания:</label>
+            <input class="input-field" type="text" th:value="${med_card.visits.patient.name}">
+        </div>
+
+        <div class="row">
+            <label>Объективные данные:</label>
+            <input class="input-field" type="text" th:value="${med_card.objective}">
+        </div>
+
+        <div class="row">
+            <label>Прикус:</label>
+            <input class="input-field" type="text">
+        </div>
+    </div>
+</body>
+</html>

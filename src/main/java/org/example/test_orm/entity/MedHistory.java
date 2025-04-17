@@ -1,18 +1,21 @@
 package org.example.test_orm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class MedHistory {
+    public MedHistory(boolean status, Patient patient, String name) {
+        this.status = status;
+        this.patient = patient;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
@@ -25,8 +28,7 @@ public class MedHistory {
     @Column(nullable = false)
     private boolean status;
 
-    public MedHistory(boolean status, Patient patient) {
-        this.status = status;
-        this.patient = patient;
-    }
+    @Column(nullable = false)
+    private String name;
+
 }

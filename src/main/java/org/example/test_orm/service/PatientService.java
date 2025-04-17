@@ -23,7 +23,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     public List<Patient> getPatients(Cookie[] cookies) {
-        Doctor doctor = getDoctorFromToken(cookies);
+        Doctor doctor = authService.getDoctorFromCookie(cookies);
         return patientRepository.findPatientsByDoctor(doctor);
     }
 
@@ -43,11 +43,15 @@ public class PatientService {
     public List<Patient> getPatientForInputName(String name) {
         return patientRepository.findByNameStartingWith(name);
     }
+
+    public List<Patient> getPatientForInputName(String name, Doctor doctor) {
+        return patientRepository.findByNameStartingWithAndDoctor(name, doctor);
+    }
     @Transactional
     public void createPatient(Patient patient, Cookie[] cookies) {
         try {
             if(LocalDate.now().isAfter(patient.getBirthDate())) {
-                patient.setDoctor(getDoctorFromToken(cookies));
+                patient.setDoctor(authService.getDoctorFromCookie(cookies));
                 Patient savedPatient = patientRepository.saveAndFlush(patient); // TODO (Самвел) в будущем заменить на тригеры (это костыль)
                 medHistoryService.createMedHistoryPatient(savedPatient);
             }   else {
@@ -65,15 +69,4 @@ public class PatientService {
         }
     }
 
-    private Doctor getDoctorFromToken(Cookie[] listCookies) {
-        String token = "";
-        for(Cookie cookie: listCookies) {
-            if (cookie.getName().equals("access_token") || cookie.getName().equals("refresh_token") ) {
-                token = cookie.getValue();
-                String username = authService.parseToken(token);
-                return authService.getDoctorByLogin(username);
-            }
-        }
-        throw new RuntimeException("Не удалось получить доктора из токенов");
-    }
 }

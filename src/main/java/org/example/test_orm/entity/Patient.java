@@ -36,10 +36,6 @@ public class Patient {
     @JoinColumn(name = "username_id", referencedColumnName = "id", nullable = false)
     private Doctor doctor;
 
-    // Добавляем обратную связь с MedicalHistory
-    @OneToMany(mappedBy = "medicalHistoryOfClients", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicalHistory> medicalHistories;
-
 
 //    private String gender;      // Пол
 //
