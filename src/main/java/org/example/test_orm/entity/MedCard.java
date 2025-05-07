@@ -20,9 +20,6 @@ public class MedCard {
     @ManyToOne
     private Visits visits;
 
-    @Transient
-    private Preset preset;
-
     private String diagnosis;
     private String complaints;
     private String anamnesis;

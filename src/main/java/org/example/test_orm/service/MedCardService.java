@@ -14,7 +14,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MedCardService {
     private final VisitsService visitsService; // TODO в будщем заменить костыл (САМВЕЛ)
-//    private final PresetService presetService;
     private final MedCardRepository medCardRepository;
     private final TeethRepository teethRepository;
 
@@ -39,4 +38,6 @@ public class MedCardService {
     public List<MedCard> getMedCardsByPatientID(long patientId) {
         return medCardRepository.findMedCardsByVisitsPatientID(patientId);
     }
+
+
 }

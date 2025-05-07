@@ -1,15 +1,13 @@
 package org.example.test_orm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 
-@Entity
+@Entity(name = "directory_value")
 @Getter
 @Setter
-//@ToString
 public class DirectoryValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +17,6 @@ public class DirectoryValue {
 
     @ManyToOne
     @JoinColumn(name = "directory_id")
-    @JsonIgnore
     private Directory directory;
 
 

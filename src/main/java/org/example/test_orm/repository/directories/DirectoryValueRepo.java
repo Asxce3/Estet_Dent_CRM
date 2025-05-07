@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface DirectoryValueRepo extends JpaRepository<DirectoryValue, Long> {
     List<DirectoryValue> findByDirectory(Directory directory);
+
 }

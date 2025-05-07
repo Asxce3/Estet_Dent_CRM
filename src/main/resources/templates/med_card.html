@@ -45,7 +45,7 @@
         }
 
         .btn {
-            background-color: #008CBA;
+            background-color: #4285f4;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -53,6 +53,11 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 20px;
+        }
+
+        .btn:hover {
+            transition: 0.5s;
+            background-color: #3c7ade;
         }
 
         .card {
@@ -68,8 +73,13 @@
         }
 
         .right-sidebar {
+
             border: 1px solid #ddd;
             width: 45%;
+        }
+
+        .general_right_side_bar {
+            margin-left: 10px;
         }
 
 
@@ -132,18 +142,72 @@
 
         .teeth:nth-child(4) { grid-column: 2; grid-row: 2; } /* Нижний правый */
 
+
+
+
+        /*Стили директорий*/
         ul {
             list-style-type: none;
-            padding-left: 20px;
+            margin-left: 20px;
+            padding-left: 0;
         }
-        .folder {
-            font-weight: bold;
-            cursor: pointer;
+        li { cursor: pointer; margin: 5px 0; position: relative; }
+        .hidden { display: none; }
+        .values { font-style: italic; color: #000000; margin-left: 15px;             padding-left: 10px;
         }
-        .hidden {
+
+
+        .context-menu {
+            position: absolute;
+            z-index: 1000;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
             display: none;
         }
-        li { font-weight: normal; cursor: pointer; }
+        .context-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 5px 0;
+        }
+        .context-menu li {
+            padding: 6px 20px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .context-menu li:hover {
+            background: #eee;
+        }
+
+
+        .folder{
+            display: flex;
+        }
+
+
+        .folder_symbol {
+            display: flex;
+            flex-direction: row;
+            align-self: center;
+            font-size: 7px;
+            margin-right:5px;
+        }
+
+        #create-root {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #create-root:hover {
+            transition: 0.5s;
+            background-color: #3c7ade;
+        }
+
+
     </style>
 </head>
 <body>
@@ -253,10 +317,14 @@
             </div>
         </div>
         <div class="right-sidebar">
-            <h2>Структура директорий</h2>
-            <div id="tree"></div>
+            <div class="general_right_side_bar">
+                <h2>Структура директорий</h2>
+                <button id="create-root" type="button">Создать корневую папку</button>
+            </div>
 
+            <div id="tree-container"></div>
         </div>
+
     </div>
 
     <div class="btn_container">
@@ -264,10 +332,554 @@
         </a>
         <button id="save-btn" class="btn" type="submit">Сохранить карту</button>
     </div>
-<!--    <input type="file" name="files[]" onchange="addFileInput(this)">-->
+
+    <div id="context-menu" class="context-menu">
+        <ul>
+            <li id="create">Создать папку</li>
+            <li id="create-text">Создать текст</li> <!-- Новый пункт -->
+            <li id="rename">Переименовать</li>
+            <li id="delete">Удалить</li>
+        </ul>
+    </div>
+
+    <div id="value-context-menu" class="context-menu">
+        <ul>
+            <li id="edit-value">Редактировать текст</li>
+            <li id="delete-value">Удалить текст</li>
+        </ul>
+    </div>
+
+
+    <!--    <input type="file" name="files[]" onchange="addFileInput(this)">-->
 </form>
 
-<script th:src="@{/js/med_card/Auto_filling_fields.js}"></script>
 
+
+<script>
+
+<!--    Логика связанная с директориями-->
+    let currentNode = null;
+    const openNodes = new Set();
+    let currentValue = null;
+    const directoryURI = '/med_card/directories'
+    const valueURI = '/med_card/directories/values'
+    let activeTextarea = null;
+    let closeFolderSymbol = '<div class="folder_symbol">▶</div>';
+    let openFolderSymbol = '<div class="folder_symbol">▼</div>';
+    let data = [
+        {
+            "id": 1,
+            "threeId": null,
+            "parentId": null,
+            "name": "Терапия",
+            "category": "diagnosis",
+            "values": [],
+            "children": [
+                {
+                    "id": 2,
+                    "threeId": null,
+                    "parentId": 1,
+                    "name": "Кариес",
+                    "category": "diagnosis",
+                    "values": [
+                        {
+                            "id": 1,
+                            "directoryId": 2,
+                            "name": "Кариес 1"
+                        },
+                        {
+                            "id": 2,
+                            "directoryId": 2,
+                            "name": "Кариес 2"
+                        },
+                        {
+                            "id": 3,
+                            "directoryId": 2,
+                            "name": "Кариес 3"
+                        }
+                    ],
+                    "children": []
+                },
+                {
+                    "id": 3,
+                    "threeId": null,
+                    "parentId": 1,
+                    "name": "Пульпит",
+                    "category": "diagnosis",
+                    "values": [
+                        {
+                            "id": 4,
+                            "directoryId": 3,
+                            "name": "Пульпит 1"
+                        },
+                        {
+                            "id": 5,
+                            "directoryId": 3,
+                            "name": "Пульпит 2"
+                        },
+                        {
+                            "id": 6,
+                            "directoryId": 3,
+                            "name": "Пульпит 3 "
+                        }
+                    ],
+                    "children": []
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "threeId": null,
+            "parentId": null,
+            "name": "Детство",
+            "category": "complaints",
+            "values": [],
+            "children": [
+                {
+                    "id": 5,
+                    "threeId": null,
+                    "parentId": 4,
+                    "name": "Папка№1",
+                    "category": "complaints",
+                    "values": [
+                        {
+                            "id": 7,
+                            "directoryId": 5,
+                            "name": "Кариес 1"
+                        },
+                        {
+                            "id": 8,
+                            "directoryId": 5,
+                            "name": "Кариес 2"
+                        },
+                        {
+                            "id": 9,
+                            "directoryId": 5,
+                            "name": "Кариес 3"
+                        }
+                    ],
+                    "children": []
+                },
+                {
+                    "id": 6,
+                    "threeId": null,
+                    "parentId": 4,
+                    "name": "Папка№2",
+                    "category": "complaints",
+                    "values": [
+                        {
+                            "id": 10,
+                            "directoryId": 6,
+                            "name": "Пульпит 1"
+                        },
+                        {
+                            "id": 11,
+                            "directoryId": 6,
+                            "name": "Пульпит 2"
+                        },
+                        {
+                            "id": 12,
+                            "directoryId": 6,
+                            "name": "Пульпит 3 "
+                        }
+                    ],
+                    "children": []
+                }
+            ]
+        }
+    ]
+
+
+    getData()
+
+    document.getElementById('create-root').addEventListener('click', async () => {
+        let nameDirectory = checkName(prompt())
+        if(nameDirectory === null) {
+            return;
+        }
+
+        const newRoot = {
+            id: 0,
+            name: nameDirectory,
+            parentId: null,
+            children: [],
+            values: [],
+            category: activeTextarea.id,
+        };
+
+        const savedDirectory = await createDirectory(newRoot)
+
+        data.push(savedDirectory);
+        refreshTree();
+    });
+
+    function showValueContextMenu(x, y, value, parentNode) {
+        currentValue = { value, parentNode };
+        const menu = document.getElementById('value-context-menu');
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+        menu.style.display = 'block';
+    }
+
+    document.getElementById('create-text').addEventListener('click', async () => {
+        let nameValue = checkName(prompt())
+        if(nameValue === null) {
+            return;
+        }
+        const newValue = {
+            id: 0,
+            directoryId: currentNode.node.id,
+            name : nameValue
+        };
+
+        const savedValue = await createValue(newValue);
+
+        currentNode.node.values = currentNode.node.values || [];
+        currentNode.node.values.push(savedValue);
+
+        openNodes.add(currentNode.node.id); // сохранить открытую папку
+        refreshTree();
+    });
+
+    document.getElementById('edit-value').addEventListener('click', () => {
+        let nameValue = checkName(prompt())
+        if(nameValue === null) {
+            return;
+        }
+        updateValue(currentValue.value, nameValue)
+        currentValue.value.name = nameValue;
+        refreshTree();
+    });
+
+    document.getElementById('delete-value').addEventListener('click', () => {
+
+        const values = currentValue.parentNode.values;
+        const index = values.findIndex(v => v.id === currentValue.value.id);
+        if (index !== -1) {
+            const id = values[index].id
+            deleteValue(id)
+            values.splice(index, 1);
+            refreshTree();
+        }
+    });
+
+    document.addEventListener('click', () => {
+        document.getElementById('context-menu').style.display = 'none';
+        document.getElementById('value-context-menu').style.display = 'none';
+    });
+
+    function createTree(data, parentElement) {
+
+        const ul = document.createElement('ul');
+        parentElement.appendChild(ul);
+
+        data.forEach(item => {
+            const li = document.createElement('li');
+            const label = document.createElement('span');
+            label.innerHTML = closeFolderSymbol + item.name;
+            label.classList.add('folder')
+            li.appendChild(label);
+            li.dataset.nodeId = item.id;
+
+            const childrenContainer = document.createElement('div');
+            if (!openNodes.has(item.id)) {
+                childrenContainer.classList.add('hidden');
+            }
+
+            // values
+            if (item.values && item.values.length > 0) {
+                const valuesList = document.createElement('ul');
+                valuesList.classList.add('values');
+                item.values.forEach(val => {
+                    const valueLi = document.createElement('li');
+                    valueLi.classList.add('folder_value')
+                    valueLi.textContent = val.name;
+                    valueLi.dataset.valueId = val.id;
+
+                    // Контекстное меню для value
+                    valueLi.addEventListener('contextmenu', e => {
+                        e.preventDefault();
+                        showValueContextMenu(e.pageX, e.pageY, val, item);
+                    });
+
+                    // Подставление текста в поле ввода
+                    valueLi.addEventListener('click', e => {
+                        if (activeTextarea) {
+                            activeTextarea.value += (activeTextarea.value ?  ' ' : '') + val.name;
+                        }
+                    });
+
+                    valuesList.appendChild(valueLi);
+                });
+                childrenContainer.appendChild(valuesList);
+            }
+
+            // рекурсивно строим детей
+            if (item.children && item.children.length > 0) {
+                createTree(item.children, childrenContainer);
+            }
+
+            li.appendChild(childrenContainer);
+
+            // Клик по названию — открытие/закрытие
+            label.addEventListener('click', e => {
+                e.stopPropagation();
+                const isOpen = !childrenContainer.classList.toggle('hidden');
+                if (isOpen) {
+                    label.innerHTML = openFolderSymbol + item.name;
+                    openNodes.add(item.id);
+                } else {
+                    label.innerHTML = closeFolderSymbol + item.name;
+                    openNodes.delete(item.id);
+                }
+            });
+
+            // Контекстное меню
+            label.addEventListener('contextmenu', e => {
+                e.preventDefault();
+                showContextMenu(e.pageX, e.pageY, item, li);
+            });
+
+            ul.appendChild(li);
+        });
+    }
+
+    function showContextMenu(x, y, node, element) {
+        currentNode = { node, element };
+        const menu = document.getElementById('context-menu');
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+        menu.style.display = 'block';
+    }
+
+    document.addEventListener('click', () => {
+        document.getElementById('context-menu').style.display = 'none';
+    });
+
+    document.getElementById('create').addEventListener('click', async () => {
+        let nameDirectory = checkName(prompt())
+        if(nameDirectory === null) {
+            return;
+        }
+
+        const newNode = {
+            id: 0,
+            parentId: currentNode.node.id,
+            name : nameDirectory,
+            values: [],
+            children: [],
+            category: currentNode.node.category,
+        };
+
+        const savedDirectory = await createDirectory(newNode)
+
+
+        currentNode.node.children = currentNode.node.children || [];
+        currentNode.node.children.push(savedDirectory);
+
+        openNodes.add(currentNode.node.id); // Оставляем родителя открытым
+        refreshTree();
+    });
+
+    document.getElementById('rename').addEventListener('click', () => {
+        let nameDirectory = checkName(prompt())
+        if(nameDirectory === null) {
+            return;
+        }
+        updateDirectory(currentNode.node, nameDirectory)
+        currentNode.node.name = nameDirectory;
+        refreshTree()
+
+    });
+
+    document.getElementById('delete').addEventListener('click', () => {
+        if (confirm("Удалить папку и все вложенные элементы?")) {
+            const id = currentNode.node.id;
+            deleteDirectory(id)
+            deleteNode(data, id);
+            openNodes.delete(id);
+            refreshTree();
+        }
+    });
+
+    function deleteNode(list, idToDelete) {
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (list[i].id === idToDelete) {
+                list.splice(i, 1);
+            } else if (list[i].children) {
+                deleteNode(list[i].children, idToDelete);
+            }
+        }
+    }
+
+    function refreshTree() {
+        const container = document.getElementById('tree-container');
+        let nodes = data.filter(function (n) {
+            if(n.category === activeTextarea.id){
+                return n;
+            }
+        })
+        container.innerHTML = '';
+
+        createTree(nodes, container);
+    }
+
+    document.addEventListener('focusin', (e) => {
+        if (e.target.tagName === 'TEXTAREA') {
+            activeTextarea = e.target;
+            const container = document.getElementById('tree-container');
+            container.innerHTML = '';
+
+            refreshTree();
+        }
+    });
+
+    async function createDirectory(directory) {
+        try {
+            const response = await fetch(directoryURI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: directory.id,
+                    name: directory.name,
+                    parentId: directory.parentId,
+                    category: directory.category
+                })
+            })
+            if (!response.ok) {
+                throw new Error(response.message);
+            }   else {
+                alert("Директория успешно создана!")
+                return await response.json()
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    async function updateDirectory(directory, name) {
+        try {
+            const response = await fetch(directoryURI + `/${directory.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: directory.id,
+                    name: name,
+                    parentId: directory.parentId,
+                    category: directory.category
+                })
+            })
+            if (!response.ok) {
+                throw new Error(response.message);
+            }   else {
+                alert("Директория успешно обновлена!")
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    async function deleteDirectory(id) {
+        try {
+            const response = await fetch(directoryURI + `/${id}`, {
+                method: 'DELETE'
+            })
+            if (!response.ok) {
+                throw new Error(`Response status = ${response.status}`);
+            }   else {
+                alert("Директория успешно удалена!")
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    async function createValue(value) {
+        try {
+            const response = await fetch(valueURI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: value.id,
+                    name: value.name,
+                    directoryId: value.directoryId,
+                })
+            })
+
+            if (!response.ok) {
+                throw new Error(response.message);
+            }   else {
+                alert("Запись успешно создана!")
+                return await response.json();
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    async function updateValue(value, name) {
+        try {
+            const response = await fetch(valueURI + `/${value.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: value.id,
+                    name: name,
+                    directoryId: value.directoryId,
+                })
+            })
+            if (!response.ok) {
+                throw new Error(response.message);
+            }   else {
+                alert("Запись успешно обновлена!")
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    async function deleteValue(id) {
+        try {
+            const response = await fetch(valueURI + `/${id}`, {
+                method: 'DELETE'
+            })
+            if (!response.ok) {
+                throw new Error(`Response status = ${response.status}`);
+            }   else {
+                alert("Запись успешно удалена!")
+            }
+        }   catch (error) {
+            alert("Произошла ошибка!")
+        }
+    }
+
+    function checkName(str) {
+        if (str !== null && str.trim().length > 0) {
+            return str.trim()
+        } else if (str === '') {
+            alert('Имя не должно быть пустым')
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    function getData() {
+        fetch(directoryURI)
+            .then(res => res.json())
+            .then(arr => {
+                data = arr;
+            });
+    }
+
+</script>
 </body>
 </html>
