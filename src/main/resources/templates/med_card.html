@@ -16,8 +16,6 @@
             text-decoration: none;
         }
 
-
-
         #patient-info label {
             display: block;
             margin-top: 10px;
@@ -877,8 +875,6 @@
             materials: usedMaterials,
             documents: []
         }
-
-
     }
 
     // Логика работы материалов
@@ -1012,128 +1008,6 @@
     let activeTextarea = null;
     let closeFolderSymbol = '<div class="folder_symbol">▶</div>';
     let openFolderSymbol = '<div class="folder_symbol">▼</div>';
-    let data = [
-        {
-            "id": 1,
-            "threeId": null,
-            "parentId": null,
-            "name": "Терапия",
-            "category": "diagnosis",
-            "values": [],
-            "children": [
-                {
-                    "id": 2,
-                    "threeId": null,
-                    "parentId": 1,
-                    "name": "Кариес",
-                    "category": "diagnosis",
-                    "values": [
-                        {
-                            "id": 1,
-                            "directoryId": 2,
-                            "name": "Кариес 1"
-                        },
-                        {
-                            "id": 2,
-                            "directoryId": 2,
-                            "name": "Кариес 2"
-                        },
-                        {
-                            "id": 3,
-                            "directoryId": 2,
-                            "name": "Кариес 3"
-                        }
-                    ],
-                    "children": []
-                },
-                {
-                    "id": 3,
-                    "threeId": null,
-                    "parentId": 1,
-                    "name": "Пульпит",
-                    "category": "diagnosis",
-                    "values": [
-                        {
-                            "id": 4,
-                            "directoryId": 3,
-                            "name": "Пульпит 1"
-                        },
-                        {
-                            "id": 5,
-                            "directoryId": 3,
-                            "name": "Пульпит 2"
-                        },
-                        {
-                            "id": 6,
-                            "directoryId": 3,
-                            "name": "Пульпит 3 "
-                        }
-                    ],
-                    "children": []
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "threeId": null,
-            "parentId": null,
-            "name": "Детство",
-            "category": "complaints",
-            "values": [],
-            "children": [
-                {
-                    "id": 5,
-                    "threeId": null,
-                    "parentId": 4,
-                    "name": "Папка№1",
-                    "category": "complaints",
-                    "values": [
-                        {
-                            "id": 7,
-                            "directoryId": 5,
-                            "name": "Кариес 1"
-                        },
-                        {
-                            "id": 8,
-                            "directoryId": 5,
-                            "name": "Кариес 2"
-                        },
-                        {
-                            "id": 9,
-                            "directoryId": 5,
-                            "name": "Кариес 3"
-                        }
-                    ],
-                    "children": []
-                },
-                {
-                    "id": 6,
-                    "threeId": null,
-                    "parentId": 4,
-                    "name": "Папка№2",
-                    "category": "complaints",
-                    "values": [
-                        {
-                            "id": 10,
-                            "directoryId": 6,
-                            "name": "Пульпит 1"
-                        },
-                        {
-                            "id": 11,
-                            "directoryId": 6,
-                            "name": "Пульпит 2"
-                        },
-                        {
-                            "id": 12,
-                            "directoryId": 6,
-                            "name": "Пульпит 3 "
-                        }
-                    ],
-                    "children": []
-                }
-            ]
-        }
-    ]
 
 
     getData()

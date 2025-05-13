@@ -29,13 +29,15 @@
             display: flex;
             flex-direction: column;
         }
+
         input, select, textarea {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            resize: none;
         }
         button {
-            background: #28a745;
+            background: #3c7ade;
             color: white;
             padding: 10px;
             border: none;
@@ -44,20 +46,23 @@
             width: 100%;
         }
         button:hover {
-            background: #218838;
+            background: #2563eb;
         }
+        #complaints {
+            margin-bottom: 10px;
+        }
+
     </style>
-<!--    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>-->
-<!--    <script type="text/javascript" th:src="@{/js/create/MaskNumber.js}"></script>-->
-    <script type="text/javascript" th:src="@{/js/update_visits.js}"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/create/MaskNumber.js}"></script>
 </head>
 <body>
 
 <div class="form-container">
     <h2>Обновление записи пациента: </h2>
-    <form id="appointment-form" th:action="@{/visits/update}" th:object="${visit}" method="post">
-        <input type="hidden" name="id" th:field="*{id}"/>
+    <div id="appointment-form">
+        <input type="hidden" name="id" th:field="${visit.id}" id="visit_id"/>
         <div class="form-row">
             <div class="form-group">
                 <label for="name">ФИО:</label>
@@ -83,30 +88,66 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="date_of_visit">Дата приема:</label>
-                <input type="date" id="date_of_visit" name="date_of_visit" required
-                       th:field="*{dateOfVisit}">
+                <input type="date" id="date_of_visit" name="date_of_visit" required>
             </div>
             <div class="form-group">
                 <label for="start_visit">Начало:</label>
-                <input type="time" id="start_visit" name="start_visit" required th:field="*{startVisit}">
+                <input type="time" id="start_visit" name="start_visit" required>
             </div>
 
             <div class="form-group">
-                <label for="finis_visit">Конец:</label>
-                <input type="time" id="finis_visit" name="finis_visit" required th:field="*{finishVisit}">
+                <label for="finish_visit">Конец:</label>
+                <input type="time" id="finish_visit" name="finis_visit" required>
             </div>
         </div>
-        <select id="patientSelect" th:field="*{medHistoryId}">
-            <option th:value="${medHistory.getID()}" th:text="${medHistory.getID()}"></option>
-        </select>
+
+        <div class="form-group">
+            <label for="complaints">Мед история:</label>
+            <input id="medHistory" name="medHistory" required th:field="${medHistory.name}">
+        </div>
+
         <div class="form-group">
             <label for="complaints">Жалобы пациента:</label>
             <textarea id="complaints" name="complaints" rows="3" required th:field="${visit.complaint}"></textarea>
         </div>
+        <button type="button" onclick="updateVisit()">Обновить запись</button>
+    </div>
 
-        <button type="submit">Добавить запись</button>
-
-    </form>
 </div>
+<script>
+    const visitId = document.getElementById('visit_id').value
+
+    async function updateVisit() {
+        try {
+            const json = getFields()
+            const response = await fetch(`/visits/${visitId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: json
+            })
+            if(!response.ok) {
+                throw new Error(`Response status = ${response.status}`)
+            }
+            window.location.href = '/visits'
+        }   catch (error) {
+            console.log(error)
+        }
+    }
+
+    function getFields() {
+        const date_of_visit = document.getElementById('date_of_visit').value
+        const start_visit = document.getElementById('start_visit').value
+        const finish_visit = document.getElementById('finish_visit').value
+
+        return JSON.stringify({
+            id: visitId,
+            dateOfVisit : date_of_visit,
+            startVisit : start_visit,
+            finishVisit : finish_visit
+        })
+    }
+</script>
 </body>
 </html>

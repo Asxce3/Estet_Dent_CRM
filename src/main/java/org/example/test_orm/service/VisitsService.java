@@ -33,6 +33,10 @@ public class VisitsService {
     }
 
     public void deleteVisits(long id) {
+        visitsRepository.deleteById(id);
+    }
+
+    public void canselVisit(long id) {
         Visits visits = getVisit(id);
         visits.setStatusVisit(StatusVisit.CANCELLED);
         visitsRepository.save(visits);
@@ -69,11 +73,11 @@ public class VisitsService {
                 visits.setStartVisit(visitsDTO.getStartVisit());
                 visits.setFinishVisit(visitsDTO.getFinishVisit());
                 visitsRepository.save(visits);
-                log.info("Обновление визита");
+                log.info("Visits update successful!");
             }
         }   catch (DataIntegrityViolationException e) {
-            log.warn("Не удалось создать запись Visits", e);
-            throw new DataIntegrityViolationException("Не удалось создать запись Visits", e);
+            log.warn("Visits update failed", e);
+            throw new DataIntegrityViolationException("Visits update failed", e);
         }
     }
 
