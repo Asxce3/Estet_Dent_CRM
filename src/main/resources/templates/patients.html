@@ -92,7 +92,7 @@
                 <td th:text="${patient.ID}"></td>
                 <td th:text="${patient.name}"></td>
                 <td th:text="${patient.address}"></td>
-                <td th:text="${patient.telephoneNumber}"></td>
+                <td class="phone" th:text="${patient.telephoneNumber}"></td>
                 <td th:text="${patient.birthDate}"></td>
                 <td class="action-buttons">
                     <a th:href="@{/patients/{id}(id=${patient.ID})}" class="action-btn view-btn">👁️</a>
@@ -103,6 +103,18 @@
         </table>
     </div>
 </main>
+<script>
+    function formatPhoneNumber(phone) {
+        const digits = phone.replace(/\D/g, '');
+        const number = digits.slice(1);
+        return `+7 (${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6, 8)}-${number.slice(8, 10)}`;
+    }
+    document.querySelectorAll('.phone').forEach(item => {
+        item.textContent = formatPhoneNumber(item.textContent)
+    })
+
+
+</script>
 <script src="/js/patients/patients.js"></script>
 </body>
 </html>

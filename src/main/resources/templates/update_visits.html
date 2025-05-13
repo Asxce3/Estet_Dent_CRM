@@ -3,59 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Запись на прием</title>
+    <title>Обновление записи на прием</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
         .form-container {
             background: white;
-            padding: 50px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 24px;
+            color: #333;
         }
         .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
         }
         .form-group {
-            flex: 1;
             display: flex;
             flex-direction: column;
         }
-
-        input, select, textarea {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: none;
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
         }
-        button {
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3c7ade;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        button, .create-patient-btn {
             background: #3c7ade;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
+            transition: background 0.2s;
+            text-align: center;
+            display: block;
         }
-        button:hover {
+        button:hover, .create-patient-btn:hover {
             background: #2563eb;
         }
-        #complaints {
-            margin-bottom: 10px;
+        .create-patient-btn {
+            margin-bottom: 24px;
+            text-decoration: none;
         }
-
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <script type="text/javascript" th:src="@{/js/create/MaskNumber.js}"></script>
 </head>
 <body>
 
@@ -65,7 +102,7 @@
         <input type="hidden" name="id" th:field="${visit.id}" id="visit_id"/>
         <div class="form-row">
             <div class="form-group">
-                <label for="name">ФИО:</label>
+                <label for="name">ФИО</label>
                 <input type="text" id="name" name="name" required th:field="${patient.name}" >
             </div>
 
@@ -115,12 +152,22 @@
 
 </div>
 <script>
+    const visitsUrl = '/visits'
     const visitId = document.getElementById('visit_id').value
+
+    function formatPhoneNumber(phone) {
+        const digits = phone.replace(/\D/g, '');
+        const number = digits.slice(1);
+        return `+7 (${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6, 8)}-${number.slice(8, 10)}`;
+    }
+
+    let phone = document.getElementById('phone')
+    phone.value = formatPhoneNumber(phone.value)
 
     async function updateVisit() {
         try {
             const json = getFields()
-            const response = await fetch(`/visits/${visitId}`, {
+            const response = await fetch(`${visitsUrl}/${visitId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -130,7 +177,7 @@
             if(!response.ok) {
                 throw new Error(`Response status = ${response.status}`)
             }
-            window.location.href = '/visits'
+            window.location.href = visitsUrl
         }   catch (error) {
             console.log(error)
         }
