@@ -1,24 +1,18 @@
 package org.example.test_orm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
-public class Document {
+public class ToothCondition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JsonIgnore
-    private MedCard medCard;
-
-    private String fileName;
-
-    private String path;
+    private String condition;
+    private String symbol;
 
 }

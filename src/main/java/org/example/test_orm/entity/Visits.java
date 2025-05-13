@@ -33,12 +33,6 @@ public class Visits {
     @Column(nullable = false)
     private StatusVisit statusVisit;
 
-//    @OneToMany
-//    private List<Document> documents;
-//
-//    @OneToMany
-//    private List<MedCard> medCards;
-
     @Column(nullable = false)
     private LocalTime startVisit;
 

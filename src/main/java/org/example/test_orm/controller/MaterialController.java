@@ -3,6 +3,7 @@ package org.example.test_orm.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Material;
 import org.example.test_orm.entity.Producer;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequestMapping("/materials")
 @RequiredArgsConstructor
@@ -30,6 +33,17 @@ public class MaterialController {
     private final ProducerService producerService;
     private final ProducerRepository producerRepository;
     private final MaterialsRepository materialsRepository;
+
+    @GetMapping("/api/search")
+    @ResponseBody
+    public List<Material> searchMaterial(@RequestParam(value = "word", required = false) String word) {
+        log.info("Request for search materials by name with start word : {}", word);
+        if(word != null) {
+            return materialService.getMaterialsByName(word);
+        }   else {
+            return new ArrayList<>();
+        }
+    }
 
     @GetMapping
     public String getMaterials(Model model) {

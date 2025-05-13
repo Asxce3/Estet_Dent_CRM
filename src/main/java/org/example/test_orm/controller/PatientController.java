@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.test_orm.DTO.teeth.TeethDTO;
+import org.example.test_orm.DTO.teeth.ToothConditionDTO;
 import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.MedCard;
 import org.example.test_orm.entity.Patient;
@@ -13,6 +15,8 @@ import org.example.test_orm.service.MedHistoryService;
 import org.example.test_orm.service.PatientService;
 import org.example.test_orm.service.VisitsService;
 import org.example.test_orm.service.auth.AuthService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +82,28 @@ public class PatientController {
         System.out.println(request.getMethod());
         patientService.deletePatient(id);
         return "redirect:/patients";
+    }
+
+    @GetMapping("/{id}/teeth")
+    @ResponseBody
+    public List<TeethDTO> getTeeth(@PathVariable Long id) {
+        log.info("Request for get patient teeth with patientId {}", id);
+        return patientService.getPatientTeeth(id);
+    }
+
+    @PutMapping("/{id}/teeth")
+    @ResponseBody
+    public ResponseEntity<?> updateTeeth(@PathVariable long id, @RequestBody List<TeethDTO> patientTeeth) {
+        log.info("Request for update patient teeth with patientId {}", id);
+        patientService.updatePatientTeeth(id, patientTeeth);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/teeth/condition")
+    @ResponseBody
+    public List<ToothConditionDTO> getTeethCondition() {
+        log.info("Request for get list with teeth condition");
+        return patientService.getTeethCondition();
     }
 
 }

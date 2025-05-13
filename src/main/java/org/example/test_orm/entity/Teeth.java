@@ -1,23 +1,47 @@
 package org.example.test_orm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@ToString
+@Validated
 public class Teeth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long ID;
+    private long id;
 
-    private int number;
+    @NotNull
+    @Min(1)
+    @Max(4)
+    private Integer quadrant;
 
-    private String condition;
+    @NotNull
+    @Min(1)
+    @Max(8)
+    private Integer number;
 
     @ManyToOne
-    private MedCard medCard;
+    @JsonIgnore
+    private Patient patient;
+
+    @ManyToOne
+    @JsonIgnore
+    private ToothCondition toothCondition;
+
+    @Override
+    public String toString() {
+        return String.format("id = %s, quadrant = %s, number = %s, patient = %s, toothCondition = %s",
+                id, quadrant, number, patient.getID(), toothCondition.getId());
+    }
+
 }

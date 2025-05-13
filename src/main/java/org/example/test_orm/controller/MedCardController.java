@@ -6,16 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.example.test_orm.DTO.DirectoryDTO;
 import org.example.test_orm.DTO.DirectoryValueDTO;
-import org.example.test_orm.entity.MedCard;
-import org.example.test_orm.service.MedCardService;
-import org.example.test_orm.service.DirectoryService;
-import org.example.test_orm.service.TeethService;
+import org.example.test_orm.DTO.MedCardDTO;
+import org.example.test_orm.entity.Document;
+import org.example.test_orm.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -27,14 +28,23 @@ import java.util.List;
 public class MedCardController {    // TODO расмотреть варианты перенос логики в VisitsController
     private final MedCardService medCardService;
     private final DirectoryService directoryService;
-    private final TeethService teethService;
-
+    private final DocumentService documentService;
 
     @GetMapping("/{id}")
     public String getCreatePage(@PathVariable long id, Model model) {
         model.addAttribute("med_card", medCardService.getNewMedCard(id));
         return "med_card";
     }
+
+    @PostMapping
+    @ResponseBody
+    public ResponseEntity<?> createMedCard(@RequestBody MedCardDTO medCardDTO) {
+        log.info("Request for creating medCard : {}", medCardDTO);
+        medCardService.create(medCardDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+//        return "redirect:/patients"; // TODO (Самвел) в будущем заменить переадрисацию
+    }
+
 
     @GetMapping("/directories")
     @ResponseBody
@@ -112,40 +122,20 @@ public class MedCardController {    // TODO расмотреть вариант�
     }
 
 
-//    @GetMapping("/teeth")
-//    @ResponseBody
-//    public List<Teeth> getTeeth() {
-//        return teethService.getTeeth();
-//    }
 
-
-//    @PostMapping("/document/upload")    // TODO (Самвел) временно
-//    public String CreateUploadDocumentPage(@RequestParam("files[]") List<MultipartFile> files, @ModelAttribute MedCard medCard) {
-//        String uploadDir = "/Users/samvel/Desktop/test_download/";
-//        for (MultipartFile file : files) {
-//            try {
-//                File destination = new File(uploadDir + file.getOriginalFilename());
-//                file.transferTo(destination);
-//            } catch (IOException e) {
-//                log.info(e.getMessage());
-//            }
-//        }
-//        medCardService.create(medCard);
-//        return "redirect:/patients";
-//    }
+    @PostMapping("/document/upload")
+    @ResponseBody
+    public List<Document> CreateUploadDocumentPage(@RequestParam("files") List<MultipartFile> files){
+        log.info("Request for uploading file");
+        return documentService.createFiles(files);
+    }
 
     @GetMapping("/document/{id}")
     public String getDocumentMedCard(@PathVariable long id, Model model) {
-        log.info("Запрос на отправку документа ");
+        log.info("Запрос на отправку медкарты ");
         model.addAttribute("med_card", medCardService.getMedCardByID(id));
         return "document/document_med_card";
     }
 
-
-    @PostMapping
-    public String createMedCard(@ModelAttribute MedCard medCard) {
-        medCardService.create(medCard);
-        return "redirect:/patients"; // TODO (Самвел) в будущем заменить переадрисацию
-    }
 
 }

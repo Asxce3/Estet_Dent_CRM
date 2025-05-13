@@ -1,5 +1,6 @@
 package org.example.test_orm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -13,6 +14,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.print.Doc;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -30,9 +35,11 @@ public class Material {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Производитель не должен быть null")
+    @JsonIgnore
     private Producer producer;
 
     @ManyToOne
+    @JsonIgnore
     private Doctor doctor;
 
     @NotNull(message = "Количество материала не должно быть пустым")
@@ -42,4 +49,7 @@ public class Material {
     @Digits(integer = 13, fraction = 2)
     @NotNull(message = "Поля цены не должна быть пустым")
     private BigDecimal price;
+
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MedCardMaterial> medCardMaterials = new HashSet<>();
 }

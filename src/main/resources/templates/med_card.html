@@ -16,16 +16,7 @@
             text-decoration: none;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            width: 70%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+
 
         #patient-info label {
             display: block;
@@ -107,43 +98,6 @@
             justify-content: space-between;
         }
 
-        .teeth_container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .teeth {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px;
-            /*height: 40%; !* Половина высоты *!*/
-        }
-
-        /* Размещение в четвертях */
-        .teeth:nth-child(1) { align-self: flex-start; } /* Верхний левый */
-        .teeth:nth-child(2) { align-self: flex-start; } /* Верхний правый */
-        .teeth:nth-child(3) { align-self: flex-end; } /* Нижний левый */
-        .teeth:nth-child(4) { align-self: flex-end; } /* Нижний правый */
-
-        .teeth img {
-            cursor: pointer; /* Курсор в виде указателя */
-            margin: 0 auto;
-            width: 50px;
-            height: auto;
-        }
-
-        .teeth img.clicked {
-            background-color: rgba(167, 35, 163, 0.5);
-            background-blend-mode: multiply;
-        }
-
-        .teeth:nth-child(4) { grid-column: 2; grid-row: 2; } /* Нижний правый */
-
-
-
 
         /*Стили директорий*/
         ul {
@@ -208,156 +162,848 @@
         }
 
 
+        /*Задний фон*/
+        .background_layer {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /*Переключение страниц*/
+        .tabs {
+            display: flex;
+            /*padding: 0 20px;*/
+            justify-content: flex-start;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #666;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            color: #000;
+            border-bottom: 2px solid #3c7ade;
+        }
+
+
+        .tab-content-item {
+            display: none;
+        }
+
+        .tab-content-item.active {
+            display: block;
+        }
+
+        /*Загрузка файлов*/
+
+        .drop-zone {
+            margin-top: 15px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: #555;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #007bff;
+            background-color: #e7f3ff;
+            color: #007bff;
+        }
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+
+        #fileList {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        #uploadButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #uploadButton:hover {
+            background-color: #0056b3;
+        }
+
+    /*    Материалы */
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .material-list, .used-materials {
+            display: grid;
+            gap: 15px;
+        }
+        .material-item, .used-material-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .material-info {
+            flex: 1;
+        }
+        .material-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .material-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .material-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .material-controls input {
+            width: 60px;
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .material-controls button, .remove-button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .material-controls button:hover, .remove-button:hover {
+            background-color: #0056b3;
+        }
+        .remove-button {
+            background-color: #dc3545;
+        }
+        .remove-button:hover {
+            background-color: #b02a37;
+        }
+        .used-materials {
+            margin-top: 30px;
+        }
+        .used-materials h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .used-material-item {
+            background-color: #f9f9f9;
+        }
+
+        /*Зубы*/
+
+        .dental-chart {
+            display: grid;
+            grid-template-columns: repeat(16, 40px);
+            gap: 5px;
+            background-color: #fff;
+            padding: 20px;
+
+        }
+        .tooth {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            font-size: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+        .tooth:hover {
+            background-color: #d0d0d0;
+        }
+        .tooth img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+        .tooth .diagnosis-marker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+        .tooth .tooltip {
+            visibility: hidden;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+        .tooth:hover .tooltip {
+            visibility: visible;
+        }
+        .teeth_context_menu {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+        .teeth_context_menu div {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .teeth_context_menu div:hover {
+            background-color: #f0f0f0;
+        }
+        .marked {
+            background-color: #ffcccb;
+        }
+        .healthy {
+            background-color: #d4edda;
+        }
+        .background_teeth {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            border-radius: 8px;
+            /*box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);*/
+        }
+
     </style>
 </head>
 <body>
-<form class="container" method="POST"  id="upload-form" enctype="multipart/form-data" th:action="@{/med_card}" th:object="${med_card}">
-    <h1>Зубы пациента</h1>
-    <div class="teeth_container">
-        <div class="teeth 1" >
-            <img  src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+
+<form class="background_layer" method="POST"  id="upload-form" enctype="multipart/form-data" th:action="@{/med_card}" th:object="${med_card}">
+    <div class="tabs">
+        <div class="tab active" data-tab="medcard">Меккарта пациента</div>
+        <div class="tab" data-tab="upload_file">Загрузка файлов</div>
+        <div class="tab" data-tab="material">Используемые материалы</div>
+    </div>
+
+    <input type="hidden" th:value="${med_card.visits.patient.ID}" id="patient-id">
+
+
+    <div class="tab-content">
+        <div id="medcard-content" class="tab-content-item active">
+            <h1>Зубы пациента</h1>
+            <div class="background_teeth">
+                <div class="dental-chart" id="dentalChart"></div>
+            </div>
+
+            <div class="teeth_context_menu" id="teethContextMenu">
+                <div onclick="setDiagnosis('Здоров')">Здоров</div>
+                <div onclick="setDiagnosis('Кариес')">Кариес</div>
+                <div onclick="setDiagnosis('Пульпит')">Пульпит</div>
+                <div onclick="setDiagnosis('Периодонтит')">Периодонтит</div>
+                <div onclick="setDiagnosis('Удален')">Удален</div>
+            </div>
+
+            <div id="patient-info">
+                <input type="hidden" id="visits" th:field="*{visits}">
+                <h1>Карта лечения пациента</h1>
+                <div class="patient_bar">
+                    <label for="patient-name">Имя пациента:</label>
+                    <span id="patient-name" th:text="${med_card.visits.patient.name}">Вася Пупкин</span>
+
+                </div>
+                <div class="patient_bar">
+                    <label for="patient-birth-date">Дата рождения:</label>
+                    <span id="patient-birth-date" th:text="${med_card.visits.patient.birthDate}">03.12.2003</span>
+                </div>
+                <div class="patient_bar">
+                    <label for="patient-telephone">Номер телефона:</label>
+                    <span id="patient-telephone" th:text="${med_card.visits.patient.telephoneNumber}">+77019884492</span>
+                </div>
+            </div>
+            <div class="card" >
+                <div id="medical-info">
+                    <div class="bar">
+                        <label for="diagnosis">Диагноз:</label>
+                        <textarea type="text" id="diagnosis" placeholder="Введите диагноз" th:field="*{diagnosis}"></textarea>
+                    </div>
+
+                    <div class="bar">
+                        <label for="complaints">Жалобы:</label>
+                        <textarea id="complaints" placeholder="Введите жалобы" rows="2" th:field="*{complaints}"></textarea>
+                    </div>
+
+                    <div class="bar">
+                        <label for="anamnesis">Анамнез:</label>
+                        <textarea id="anamnesis" placeholder="Введите анамнез" rows="3" th:field="*{anamnesis}"></textarea>
+                    </div>
+
+                    <div class="bar">
+                        <label for="objective">Объективно:</label>
+                        <textarea id="objective" placeholder="Объективные данные" rows="3" th:field="*{objective}"></textarea>
+                    </div>
+
+                    <div class="bar">
+                        <label for="treatment">Лечение:</label>
+                        <textarea id="treatment" placeholder="Введите детали лечения" rows="4" th:field="*{treatment}"></textarea>
+                    </div>
+
+                    <div class="bar">
+                        <label for="recommendations">Рекомендации:</label>
+                        <textarea id="recommendations" placeholder="Введите рекомендации" rows="3" th:field="*{recommendations}"></textarea>
+                    </div>
+
+
+                    <div class="bar">
+                        <label for="allergies">Аллергические реакции:</label>
+                        <textarea type="text" id="allergies" placeholder="Введите информацию об аллергиях" th:field="*{allergies}"></textarea>
+
+                    </div>
+
+                    <div class="bar">
+                        <label for="botkin">Болезнь Боткина:</label>
+                        <textarea type="text" id="botkin" placeholder="Введите информацию о болезни Боткина" th:field="*{botkin}"></textarea>
+                    </div>
+                </div>
+                <div class="right-sidebar">
+                    <div class="general_right_side_bar">
+                        <h2>Структура директорий</h2>
+                        <button id="create-root" type="button">Создать корневую папку</button>
+                    </div>
+                    <div id="tree-container"></div>
+                </div>
+            </div>
+
+            <div class="btn_container">
+                <a th:href="@{/patients/{id}(id=${med_card.visits.patient.ID})}" id="back-btn" class="btn"> Вернутся</a>
+                <button id="save-btn" class="btn" type="button" onclick="createMedCard()">Сохранить карту</button>
+            </div>
+
+            <div id="context-menu" class="context-menu">
+                <ul>
+                    <li id="create">Создать папку</li>
+                    <li id="create-text">Создать текст</li> <!-- Новый пункт -->
+                    <li id="rename">Переименовать</li>
+                    <li id="delete">Удалить</li>
+                </ul>
+            </div>
+
+            <div id="value-context-menu" class="context-menu">
+                <ul>
+                    <li id="edit-value">Редактировать текст</li>
+                    <li id="delete-value">Удалить текст</li>
+                </ul>
+            </div>
         </div>
-        <div class="teeth 2">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+        <div id="upload_file-content" class="tab-content-item">
+            <div class="drop-zone" id="dropZone">
+                Перетащите файлы сюда или кликните для выбора
+                <input type="file" id="fileInput" multiple>
+            </div>
+            <div id="fileList"></div>
         </div>
-        <div class="teeth 3">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-        </div>
-        <div class="teeth 4">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
-            <img src="https://www.freeiconspng.com/thumbs/tooth-icon/dental-tooth-icon-12.png" alt="">
+        <div id="material-content" class="tab-content-item">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Поиск материалов..." required oninput="checkSearchInput()">
+            </div>
+            <div class="material-list" id="materialList"></div>
+            <div class="used-materials">
+                <h2>Использованные материалы</h2>
+                <div id="usedMaterialList"></div>
+            </div>
         </div>
     </div>
 
-    <div id="patient-info">
-        <input type="hidden" th:field="*{visits}">
-        <h1>Карта лечения пациента</h1>
-        <div class="patient_bar">
-            <label for="patient-name">Имя пациента:</label>
-            <span id="patient-name" th:text="${med_card.visits.patient.name}">Вася Пупкин</span>
-        </div>
-        <div class="patient_bar">
-            <label for="patient-birth-date">Дата рождения:</label>
-            <span id="patient-birth-date" th:text="${med_card.visits.patient.birthDate}">03.12.2003</span>
-        </div>
-        <div class="patient_bar">
-            <label for="patient-telephone">Номер телефона:</label>
-            <span id="patient-telephone" th:text="${med_card.visits.patient.telephoneNumber}">+77019884492</span>
-        </div>
-    </div>
-    <div class="card" >
-        <div id="medical-info">
-            <div class="bar">
-                <label for="diagnosis">Диагноз:</label>
-                <textarea type="text" id="diagnosis" placeholder="Введите диагноз" th:field="*{diagnosis}"></textarea>
-            </div>
-
-            <div class="bar">
-                <label for="complaints">Жалобы:</label>
-                <textarea id="complaints" placeholder="Введите жалобы" rows="2" th:field="*{complaints}"></textarea>
-            </div>
-
-            <div class="bar">
-                <label for="anamnesis">Анамнез:</label>
-                <textarea id="anamnesis" placeholder="Введите анамнез" rows="3" th:field="*{anamnesis}"></textarea>
-            </div>
-
-            <div class="bar">
-                <label for="objective">Объективно:</label>
-                <textarea id="objective" placeholder="Объективные данные" rows="3" th:field="*{objective}"></textarea>
-            </div>
-
-            <div class="bar">
-                <label for="treatment">Лечение:</label>
-                <textarea id="treatment" placeholder="Введите детали лечения" rows="4" th:field="*{treatment}"></textarea>
-            </div>
-
-            <div class="bar">
-                <label for="recommendations">Рекомендации:</label>
-                <textarea id="recommendations" placeholder="Введите рекомендации" rows="3" th:field="*{recommendations}"></textarea>
-            </div>
-
-
-            <div class="bar">
-                <label for="allergies">Аллергические реакции:</label>
-                <textarea type="text" id="allergies" placeholder="Введите информацию об аллергиях" th:field="*{allergies}"></textarea>
-
-            </div>
-
-            <div class="bar">
-                <label for="botkin">Болезнь Боткина:</label>
-                <textarea type="text" id="botkin" placeholder="Введите информацию о болезни Боткина" th:field="*{botkin}"></textarea>
-            </div>
-        </div>
-        <div class="right-sidebar">
-            <div class="general_right_side_bar">
-                <h2>Структура директорий</h2>
-                <button id="create-root" type="button">Создать корневую папку</button>
-            </div>
-
-            <div id="tree-container"></div>
-        </div>
-
-    </div>
-
-    <div class="btn_container">
-        <a th:href="@{/patients/{id}(id=${med_card.visits.patient.ID})}" id="back-btn" class="btn"> Вернутся
-        </a>
-        <button id="save-btn" class="btn" type="submit">Сохранить карту</button>
-    </div>
-
-    <div id="context-menu" class="context-menu">
-        <ul>
-            <li id="create">Создать папку</li>
-            <li id="create-text">Создать текст</li> <!-- Новый пункт -->
-            <li id="rename">Переименовать</li>
-            <li id="delete">Удалить</li>
-        </ul>
-    </div>
-
-    <div id="value-context-menu" class="context-menu">
-        <ul>
-            <li id="edit-value">Редактировать текст</li>
-            <li id="delete-value">Удалить текст</li>
-        </ul>
-    </div>
-
-
-    <!--    <input type="file" name="files[]" onchange="addFileInput(this)">-->
 </form>
 
-
-
 <script>
+    // Логика переключения вкладок
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
 
-<!--    Логика связанная с директориями-->
+            // Add active class to clicked tab
+            tab.classList.add('active');
+
+            // Hide all tab content
+            document.querySelectorAll('.tab-content-item').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Show content for selected tab
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(tabId + '-content').classList.add('active');
+        });
+    });
+
+
+    // Логика работы зубов
+    const dentalChart = document.getElementById('dentalChart');
+    const teethContextMenu = document.getElementById('teethContextMenu');
+    const patientId = document.getElementById('patient-id').value
+    const teethURL = `/patients/${patientId}/teeth`;
+    const teethConditionURL = '/patients/teeth/condition';
+
+    let currentTooth = null;
+
+    const requestTeeth = new Set();
+
+
+    getTeeth()
+
+    async function savePatientTeeth() {
+        const teeth = []
+        for(tooth of requestTeeth) {
+            teeth.push(tooth)
+        }
+        try {
+            const response = await fetch(`${teethURL}`, {
+                method : 'PUT',
+                headers : {
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify(teeth)
+            })
+            if(!response.ok) {
+                throw new Error(`Error with status ${response.status}`)
+            }
+            return response;
+        }   catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async function getTeeth() {
+        try {
+            const response = await fetch(teethURL)
+            if(!response.ok) {
+                throw new Error(`Error with status ${response.status}`)
+            }
+            const teeth = await response.json()
+            const sortedTeeth = teeth.sort((a, b) => {
+                const fdiA = a.quadrant * 10 + a.number;
+                const fdiB = b.quadrant * 10 + b.number;
+                const order = [
+                    ...Array.from({length: 8}, (_, i) => 10 + (8 - i)), // 18-11
+                    ...Array.from({length: 8}, (_, i) => 20 + (i + 1)), // 21-28
+                    ...Array.from({length: 8}, (_, i) => 40 + (8 - i)),  // 48-41
+                    ...Array.from({length: 8}, (_, i) => 30 + (i + 1)) // 31-38
+                ];
+                return order.indexOf(fdiA) - order.indexOf(fdiB);
+            });
+
+            const teethConditions = await getTeethCondition()
+            showTeeth(sortedTeeth, teethConditions)
+        }   catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async function getTeethCondition() {
+        try {
+            const response = await fetch(teethConditionURL); // Замените на ваш реальный endpoint
+            if (!response.ok) throw new Error('Ошибка при получении диагнозов');
+            return  await response.json();
+
+        } catch (error) {
+            console.error('Ошибка:', error);
+            teethContextMenu.style.display = 'none';
+        }
+    }
+
+
+    // Создание 32 зубов
+    function showTeeth(teeth, teethConditions) {
+        teeth.forEach((toothObject, index) => {
+            const toothDIV = document.createElement('div');
+            toothDIV.className = 'tooth healthy';
+            toothDIV.dataset.id = toothObject.id;
+            let toothCondition = teethConditions.find(condition => condition.id === toothObject.toothConditionId);
+            toothDIV.dataset.diagnosis = toothCondition.condition
+            if(toothCondition.condition !== 'Здоровый') {
+                toothDIV.className = 'tooth marked';
+
+            }
+
+            let teethSymbol = toothCondition.symbol
+
+            toothDIV.innerHTML = `
+                <img src="https://static.thenounproject.com/png/225702-200.png" alt="Tooth">
+                <span class="quadrant">${toothObject.quadrant}</span>
+                <span class="number">${toothObject.number}</span>
+                <span class="diagnosis-marker">${teethSymbol}</span>
+                <span class="tooltip">${toothCondition.condition}</span>
+
+            `;
+            toothDIV.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showTeethMenu(e, toothDIV, teethConditions, toothObject);
+            });
+            dentalChart.appendChild(toothDIV);
+        });
+    }
+
+
+    // Получение диагнозов с сервера и показ контекстного меню
+    async function showTeethMenu(e, tooth, teethConditions, toothObject) {
+        currentTooth = tooth;
+        // Очистка и заполнение контекстного меню
+        teethContextMenu.innerHTML = '';
+        teethConditions.forEach(toothCondition => {
+            const menuItem = document.createElement('div');
+            menuItem.textContent = toothCondition.condition;
+            menuItem.onclick = () => setDiagnosis(toothCondition, toothObject);
+            teethContextMenu.appendChild(menuItem);
+        });
+
+        // Показ меню
+        teethContextMenu.style.display = 'block';
+        teethContextMenu.style.left = `${e.pageX}px`;
+        teethContextMenu.style.top = `${e.pageY}px`;
+
+    }
+
+    // Установка диагноза
+    function setDiagnosis(toothCondition, toothObject) {
+        toothObject.toothConditionId = toothCondition.id
+        requestTeeth.add(toothObject)
+
+        if (currentTooth) {
+            currentTooth.classList.remove('healthy', 'marked');
+            if (toothCondition.condition === 'Здоровый') {
+                requestTeeth.delete(toothObject)
+                currentTooth.classList.add('healthy');
+            } else {
+                currentTooth.classList.add('marked');
+            }
+
+            const marker = currentTooth.querySelector('.diagnosis-marker');
+            const tooltip = currentTooth.querySelector('.tooltip');
+            marker.textContent = toothCondition.symbol;
+            tooltip.textContent = toothCondition.condition;
+            currentTooth.dataset.diagnosis = toothCondition.condition;
+            teethContextMenu.style.display = 'none';
+            currentTooth = null;
+
+        }
+    }
+
+
+    // Скрытие меню при клике вне его
+    document.addEventListener('click', () => {
+        teethContextMenu.style.display = 'none';
+        currentTooth = null;
+    });
+
+    // Логика работы закгрузки файлов
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    let selectedFiles = [];
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files);
+        handleFiles(files);
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        const files = Array.from(fileInput.files);
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        selectedFiles = [...selectedFiles, ...files];
+        updateFileList();
+
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                    <span>${index + 1}. ${file.name} (${(file.size / 1024).toFixed(2)} KB)</span>
+                    <button class="remove-button" onclick="removeFile(${index})">Удалить</button>
+                `;
+            fileList.appendChild(div);
+        });
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        updateFileList();
+
+    }
+
+
+    // Логика созранения медкарты
+    const medCardURL = '/med_card'
+    const documentURL = '/med_card/document/upload'
+    async function uploadDocument() {
+        try {
+            const formData = new FormData();
+            let len = selectedFiles.length
+            if(len === 0) {
+                return []
+            }
+
+            for(let i = 0; i < selectedFiles.length; i++) {
+                formData.append('files', selectedFiles[i])
+            }
+
+            const response = await fetch(documentURL, {
+                method : 'POST',
+                body: formData
+            })
+            if(!response.ok) {
+                throw new Error(`Response status = ${response.status}`)
+            }
+           return await response.json();
+
+        }   catch (error) {
+            console.log(error.message)
+        }
+
+    }
+    async function createMedCard() {
+        const responseForSaveTeeth = await savePatientTeeth();
+        if(!responseForSaveTeeth.ok) {
+            throw new Error('Не удалось обновить зубы')
+        }
+        const responseForUploadDocument = await uploadDocument();
+
+        const json = getFields()
+
+        json.documents = responseForUploadDocument
+
+        const response = await fetch(medCardURL, {
+            method: 'POST',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(
+                json
+            )
+        })
+        if(response.ok) {
+            window.location.href = `/patients/${patientId}`
+        }
+    }
+
+    function getFields() {
+        const diagnosis = document.getElementById('diagnosis')
+        const complaints = document.getElementById('complaints')
+        const anamnesis = document.getElementById('anamnesis')
+        const treatment = document.getElementById('treatment')
+        const objective = document.getElementById('objective')
+        const recommendations = document.getElementById('recommendations')
+        const allergies = document.getElementById('allergies')
+        const botkin = document.getElementById('botkin')
+        const visits = document.getElementById('visits')
+
+        return {
+            diagnosis : diagnosis.value,
+            complaints : complaints.value,
+            anamnesis : anamnesis.value,
+            treatment : treatment.value,
+            objective : objective.value,
+            recommendations : recommendations.value,
+            allergies : allergies.value,
+            botkin : botkin.value,
+            visitId: visits.value,
+            materials: usedMaterials,
+            documents: []
+        }
+
+
+    }
+
+    // Логика работы материалов
+    let materials = [
+        {
+            "id": 1,
+            "name": "ruu",
+            "count": 3,
+            "price": 1000.00
+        },
+        {
+            "id": 4,
+            "name": "test",
+            "count": 34,
+            "price": 300.00
+        },
+        {
+            "id": 5,
+            "name": "termostat",
+            "count": 333,
+            "price": 500.00
+        }
+    ]
+
+    const materialsUrl = '/materials/api/search?word='
+    const materialList = document.getElementById('materialList');
+    const usedMaterialList = document.getElementById('usedMaterialList');
+    let usedMaterials = []
+
+
+    function checkSearchInput() {
+        let valueInput = document.getElementById('searchInput').value;
+        if(valueInput.length > 0) {
+            getMaterials(valueInput)
+        }  else {
+            renderMaterials([])
+        }
+    }
+
+    async function getMaterials(word) {
+        try {
+            const response = await fetch(materialsUrl + word)
+            if(!response.ok) {
+                throw new Error(`response with status: ${response.status}`)
+            }
+            const data = await response.json()
+            materials = data
+            renderMaterials(data)
+        }   catch (error) {
+            console.log(error.message)
+        }
+
+    }
+
+    function renderMaterials(filteredMaterials) {
+        materialList.innerHTML = '';
+        filteredMaterials.forEach(material => {
+            const materialItem = document.createElement('div');
+            materialItem.className = 'material-item';
+            materialItem.innerHTML = `
+                    <div class="material-info">
+                        <h3>${material.name}</h3>
+                        <p>Доступно: ${material.count} шт.</p>
+                    </div>
+                    <div class="material-controls">
+                        <input type="number" min="0" max="${material.count}" value="0" data-id="${material.id}">
+                        <button type="button" onclick="useMaterial(${material.id})">Использовать</button>
+                    </div>
+                `;
+            materialList.appendChild(materialItem);
+        });
+    }
+
+    function useMaterial(materialId) {
+        const input = document.querySelector(`input[data-id="${materialId}"]`);
+        const quantity = parseInt(input.value);
+        const material = materials.find(m => m.id === materialId);
+
+        if (quantity > 0 && quantity <= material.count) {
+            material.count -= quantity;
+            const existingUsed = usedMaterials.find(um => um.id === materialId);
+            if (existingUsed) {
+                existingUsed.count += quantity;
+            } else {
+                usedMaterials.push({
+                    id: material.id,
+                    name: material.name,
+                    count: quantity
+                });
+            }
+            renderMaterials(materials);
+            renderUsedMaterials();
+        }
+    }
+
+    function renderUsedMaterials() {
+        usedMaterialList.innerHTML = '';
+        usedMaterials.forEach(used => {
+            const usedItem = document.createElement('div');
+            usedItem.className = 'used-material-item';
+            usedItem.innerHTML = `
+                    <div class="material-info">
+                        <h3>${used.name}</h3>
+                        <p>Использовано: ${used.count} шт.</p>
+                    </div>
+                    <button class="remove-button"  type="button" onclick="removeUsedMaterial(${used.id})">Удалить</button>
+                `;
+            usedMaterialList.appendChild(usedItem);
+            console.log(usedMaterials)
+        });
+    }
+
+    function removeUsedMaterial(materialId) {
+        const usedMaterial = usedMaterials.find(um => um.id === materialId);
+        if (usedMaterial) {
+            const material = materials.find(m => m.id === materialId);
+            material.count += usedMaterial.count;
+            usedMaterials = usedMaterials.filter(um => um.id !== materialId);
+            renderMaterials(materials);
+            renderUsedMaterials();
+        }
+    }
+
+
+    // Логика работы директорий
     let currentNode = null;
     const openNodes = new Set();
     let currentValue = null;

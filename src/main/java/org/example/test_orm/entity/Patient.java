@@ -1,14 +1,18 @@
 package org.example.test_orm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.example.test_orm.annotation.phone.ValidPhone;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 @Entity
 @Setter
@@ -36,27 +40,16 @@ public class Patient {
     @JoinColumn(name = "username_id", referencedColumnName = "id", nullable = false)
     private Doctor doctor;
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Teeth> teethList = new ArrayList<>();
 
-//    private String gender;      // Пол
-//
-//
-//    private String jobPlace;    // Место работы
-//
-//    private String diagnosis;   // Диагноз
-//
-//    private String complaints;  // Жалобы
-//
-//    private String previousAndConcomitantDiseases;  // Перенесеныне и сопутствующие заболевания
-//
-//    private String developmentPresentDisease;   // Развитие настоящего заболевания
-//
-//    private String objectiveDataExternalInspection; // Данные объективного исследования, внешний осмотр
-//
-//    private String bite;  // Прикус
-//
-//    private String conditionMucous; // Состояние слизистой оболочки полости рта, десен, альвеолярных отростков и нёба
-//
-//    private String xRay;  // Данные рентгеновских лабораторных исследований
+    public void addTeeth(Teeth teeth) {
+        this.teethList.add(teeth);
+        teeth.setPatient(this);
+    }
 
-
+    public void removeTeeth(Teeth teeth) {
+        this.teethList.remove(teeth);
+        teeth.setPatient(null);
+    }
 }
