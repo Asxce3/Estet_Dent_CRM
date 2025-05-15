@@ -1,6 +1,7 @@
 package org.example.test_orm.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.DTO.MedCardDTO;
 import org.example.test_orm.DTO.MedCardMaterialsDTO;
 import org.example.test_orm.entity.Document;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MedCardService {
@@ -62,6 +64,12 @@ public class MedCardService {
 
     public List<MedCard> getMedCardsByPatientID(long patientId) {
         return medCardRepository.findMedCardsByVisitsPatientID(patientId);
+    }
+
+    public void deleteMeCard(long id) {
+        log.info("Trying to delete medCard with id {}", id);
+        medCardRepository.deleteById(id);
+        log.info("Delete medCard was successful");
     }
 
 

@@ -423,6 +423,49 @@
             color: var(--text-color);
         }
 
+        .create-btn {
+            padding: 8px 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .create-btn:hover {
+            transition: 0.3s;
+            background-color: #3c7ade;
+        }
+
+        #create-card-link {
+            display: flex;
+            flex-direction: row;
+            /*justify-content: flex-end;*/
+        }
+        a {
+            text-decoration: none;
+        }
+
+        .edit-btn {
+            padding: 8px 16px;
+            background-color: #ea8b11;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .edit-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .medCard_buttons {
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
@@ -495,7 +538,7 @@
                                 <span th:text="${history.name}"></span>
                             </div>
                             <div class="history-content">
-                                <div th:each="visit : ${visits}" th:if="${visit.medHistory.ID == history.ID}" class="med_cards">
+                                <div th:each="visit : ${visits}" th:if="${visit.medHistory.ID == history.ID && visit.statusVisit != visit.statusVisit.CANCELLED}" class="med_cards">
                                     <div class="consultation">
                                         <h3>Первичная жалоба:  <span th:text="${visit.complaint}">отсутсвует</span></h3>
                                         <h3>Дата визита:  <span th:text="${visit.dateOfVisit}"></span></h3>
@@ -509,12 +552,17 @@
                                         <h3>Рекомендации:  <span th:text="${med_card.recommendations}">отсутствует</span></h3>
                                         <h3>Аллергии:  <span th:text="${med_card.allergies}">отсутствует</span></h3>
                                         <h3>Боткин:  <span th:text="${med_card.botkin}">отсутствует</span></h3>
-                                        <a id="print-card-link" th:href="@{/med_card/document/{id}(id=${med_card.ID})}">
-                                            <button>Распечатать мед карточку</button>
-                                        </a>
+
+                                        <div class="medCard_buttons">
+                                            <a id="print-card-link" th:href="@{/med_card/document/{id}(id=${med_card.ID})}">
+                                                <button class="print-btn">Распечатать мед карточку</button>
+                                            </a>
+                                            <button class="delete-btn" th:attr="data-id=${med_card.ID}" onclick="deleteMedCard(this)">Удалить медкарту</button>
+                                        </div>
                                     </div>
-                                    <a id="create-card-link" th:href="@{/med_card/{id}(id=${visit.ID})}">
-                                        <button>Создать мед карточку</button>
+
+                                    <a id="create-card-link" th:href="@{/med_card/{id}(id=${visit.ID})}" th:style="${visit.medCards.size()==0} ? 'display: block' : 'display: none'">
+                                        <button class="create-btn">Создать мед карточку</button>
                                     </a>
                                 </div>
                             </div>
@@ -532,7 +580,7 @@
                     <p>Здесь будет отображаться финансовая информация пациента.</p>
                 </div>
 
-                    <div id="documents-content" class="tab-content-item">
+                <div id="documents-content" class="tab-content-item">
                     <h3>Документы</h3>
                     <div class="documents-list">
                         <div th:each="medCard : ${med_cards}" class="visit-date-group">
@@ -548,7 +596,6 @@
                                         <button class="print-btn" th:attr="data-id=${document.id}" onclick="printDocument(this)">Напечатать</button>
                                         <button class="delete-btn" th:attr="data-id=${document.id}" onclick="deleteDocument(this)">Удалить</button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -569,6 +616,7 @@
     let phone = document.getElementById('phone')
     phone.textContent = formatPhoneNumber(phone.textContent)
     const documentDownloadURI = '/document/download';
+
     async function viewDocument(button) {
         const documentId = button.getAttribute('data-id');
         try {
@@ -581,7 +629,7 @@
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
-                window.open(url, '_blank'); // Open image in new tab
+                window.open(url, '_blank');
             } else {
                 alert('Ошибка при загрузке документа');
             }
@@ -628,13 +676,10 @@
                     const documentItem = button.closest('.document-item');
                     const visitDateGroup = documentItem.closest('.visit-date-group');
 
-                    // Удаляем элемент документа
                     documentItem.remove();
 
-                    // Проверяем, остались ли документы в группе
                     const remainingDocuments = visitDateGroup.querySelectorAll('.document-item');
                     if (remainingDocuments.length === 0) {
-                        // Если документов нет, удаляем всю группу с заголовком даты
                         visitDateGroup.remove();
                     }
 
@@ -645,6 +690,40 @@
             } catch (error) {
                 console.error('Ошибка:', error);
                 alert('Произошла ошибка при удалении документа');
+            }
+        }
+    }
+
+    async function deleteMedCard(button) {
+        const medCardId = button.getAttribute('data-id');
+        if (confirm('Вы уверены, что хотите удалить эту медицинскую карту?')) {
+            try {
+                const response = await fetch(`/med_card/${medCardId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const medCard = button.closest('.med_card');
+                    const medCardsContainer = medCard.closest('.med_cards');
+                    medCard.remove();
+
+                    const remainingMedCards = medCardsContainer.querySelectorAll('.med_card');
+                    if (remainingMedCards.length === 0) {
+                        const createCardLink = medCardsContainer.querySelector('#create-card-link');
+                        if (createCardLink) {
+                            createCardLink.style.display = 'block';
+                        }
+                    }
+
+                    alert('Медицинская карта успешно удалена');
+                } else {
+                    alert('Ошибка при удалении медицинской карты');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при удалении медицинской карты');
             }
         }
     }

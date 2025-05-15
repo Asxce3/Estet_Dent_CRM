@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,9 @@ public class Visits {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
+
+    @OneToMany(mappedBy = "visits", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedCard> medCards =  new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "med_history_id", referencedColumnName = "id")

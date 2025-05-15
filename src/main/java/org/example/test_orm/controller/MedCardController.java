@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -50,6 +49,15 @@ public class MedCardController {    // TODO расмотреть вариант�
         medCardService.create(medCardDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteMedCard(@PathVariable long id) {
+        log.info("Request for deleting med with id {}", id);
+        medCardService.deleteMeCard(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
     @GetMapping("/directories")
