@@ -6,10 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.example.test_orm.DTO.DirectoryDTO;
 import org.example.test_orm.DTO.DirectoryValueDTO;
+import org.example.test_orm.DTO.DocumentDTO;
 import org.example.test_orm.DTO.MedCardDTO;
 import org.example.test_orm.entity.Document;
 import org.example.test_orm.service.*;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -42,7 +49,6 @@ public class MedCardController {    // TODO расмотреть вариант�
         log.info("Request for creating medCard : {}", medCardDTO);
         medCardService.create(medCardDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
-//        return "redirect:/patients"; // TODO (Самвел) в будущем заменить переадрисацию
     }
 
 
@@ -131,11 +137,34 @@ public class MedCardController {    // TODO расмотреть вариант�
     }
 
     @GetMapping("/document/{id}")
-    public String getDocumentMedCard(@PathVariable long id, Model model) {
+    public String printMedCard(@PathVariable long id, Model model) {
         log.info("Запрос на отправку медкарты ");
         model.addAttribute("med_card", medCardService.getMedCardByID(id));
         return "document/document_med_card";
     }
+
+    @GetMapping("/{id}/document/download")
+    public ResponseEntity<Resource> getDocuments(@PathVariable long id) {
+        log.info("Request for getting med_card file with id  {}", id);
+        DocumentDTO documentDTO = documentService.getMedCardFile(id);
+        String contentType = "application/octet-stream"; // Тип содержимого
+        try {
+            contentType = Files.probeContentType(documentDTO.getResource().getFile().toPath());
+        } catch (IOException e) {
+            log.warn("Could not determine file type.");
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(documentDTO.getResource());
+    }
+
+    @DeleteMapping("/document/{id}")
+    public ResponseEntity<?> deleteDocument(@PathVariable long id) {
+        log.info("Request for deleting med_card file with id  {}", id);
+        documentService.deleteMedCardFile(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
 }

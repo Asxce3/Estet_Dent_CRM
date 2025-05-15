@@ -3,7 +3,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Система управления пациентами</title>
-<!--    <link rel="stylesheet" href="/css/patients/patient.css">-->
     <style>
         :root {
             --primary-color: #4285f4;
@@ -182,14 +181,14 @@
             display: block;
         }
 
-        .history-item {
+        .history-item, .document-item {
             background-color: #e9e9e9;
             border-radius: 8px;
             margin-bottom: 20px;
             overflow: hidden;
         }
 
-        .history-header {
+        .history-header, .document-header {
             padding: 10px 15px;
             display: flex;
             justify-content: space-between;
@@ -358,6 +357,72 @@
             color: white;
         }
 
+        .document-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn, .delete-btn, .print-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .view-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #3267d6;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .print-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .print-btn:hover {
+            background-color: #218838;
+        }
+
+        .document-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+        }
+
+        .visit-date-group {
+            margin-bottom: 20px;
+        }
+
+        .visit-date-header {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+
     </style>
 </head>
 <body>
@@ -417,7 +482,6 @@
 
             <div class="tabs">
                 <div class="tab active" data-tab="history">История лечения</div>
-                <div class="tab" data-tab="visits">Визиты</div>
                 <div class="tab" data-tab="finances">Финансы</div>
                 <div class="tab" data-tab="documents">Документы</div>
             </div>
@@ -425,14 +489,12 @@
             <div class="tab-content">
                 <div id="history-content" class="tab-content-item active">
                     <div class="history-list">
-
                         <div th:each="history : ${med_histories}" class="history-item">
                             <div class="history-header">
                                 <h3>Статус: <span th:text="${history.status == true} ? 'Активна' : 'Не активна'"> </span></h3>
                                 <span th:text="${history.name}"></span>
                             </div>
                             <div class="history-content">
-
                                 <div th:each="visit : ${visits}" th:if="${visit.medHistory.ID == history.ID}" class="med_cards">
                                     <div class="consultation">
                                         <h3>Первичная жалоба:  <span th:text="${visit.complaint}">отсутсвует</span></h3>
@@ -447,7 +509,6 @@
                                         <h3>Рекомендации:  <span th:text="${med_card.recommendations}">отсутствует</span></h3>
                                         <h3>Аллергии:  <span th:text="${med_card.allergies}">отсутствует</span></h3>
                                         <h3>Боткин:  <span th:text="${med_card.botkin}">отсутствует</span></h3>
-
                                         <a id="print-card-link" th:href="@{/med_card/document/{id}(id=${med_card.ID})}">
                                             <button>Распечатать мед карточку</button>
                                         </a>
@@ -459,7 +520,6 @@
                             </div>
                             <div class="toggle-btn down"></div>
                         </div>
-
                         <div class="new-entry">
                             <span>Создать мед историю</span>
                             <a th:href="@{/history/create/{id}(id=${patient.getID()})}" class="add-btn" id="createHistoryBtn">+</a>
@@ -467,26 +527,38 @@
                     </div>
                 </div>
 
-                <div id="visits-content" class="tab-content-item">
-                    <h3>Информация о визитах</h3>
-                    <p>Здесь будет отображаться информация о визитах пациента.</p>
-                </div>
-
                 <div id="finances-content" class="tab-content-item">
                     <h3>Финансовая информация</h3>
                     <p>Здесь будет отображаться финансовая информация пациента.</p>
                 </div>
 
-                <div id="documents-content" class="tab-content-item">
+                    <div id="documents-content" class="tab-content-item">
                     <h3>Документы</h3>
-                    <p>Здесь будут отображаться документы пациента.</p>
+                    <div class="documents-list">
+                        <div th:each="medCard : ${med_cards}" class="visit-date-group">
+                            <div class="visit-date-header" th:text="${medCard.visits.dateOfVisit}" th:if ="${medCard.documents.size() > 0}">Дата визита</div>
+
+                            <div th:each="document : ${medCard.documents}" class="document-item">
+                                <div class="document-header">
+                                    <div class="document-info">
+                                        <span th:text="${document.fileName}">Название документа</span>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="view-btn" th:attr="data-id=${document.id}" onclick="viewDocument(this)">Просмотреть</button>
+                                        <button class="print-btn" th:attr="data-id=${document.id}" onclick="printDocument(this)">Напечатать</button>
+                                        <button class="delete-btn" th:attr="data-id=${document.id}" onclick="deleteDocument(this)">Удалить</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 </div>
 
-<!--<script type="module" src="/js/patients/patientScript.js"></script>-->
 <script>
     function formatPhoneNumber(phone) {
         const digits = phone.replace(/\D/g, '');
@@ -496,9 +568,88 @@
 
     let phone = document.getElementById('phone')
     phone.textContent = formatPhoneNumber(phone.textContent)
+    const documentDownloadURI = '/document/download';
+    async function viewDocument(button) {
+        const documentId = button.getAttribute('data-id');
+        try {
+            const response = await fetch(`/med_card/${documentId}${documentDownloadURI}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                window.open(url, '_blank'); // Open image in new tab
+            } else {
+                alert('Ошибка при загрузке документа');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при загрузке документа');
+        }
+    }
+
+    async function printDocument(button) {
+        const documentId = button.getAttribute('data-id');
+        try {
+            const response = await fetch(`/med_card/${documentId}${documentDownloadURI}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const printWindow = window.open(url, '_blank');
+                printWindow.print();
+            } else {
+                alert('Ошибка при загрузке документа для печати');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при печати документа');
+        }
+    }
+
+    async function deleteDocument(button) {
+        const documentId = button.getAttribute('data-id');
+        if (confirm('Вы уверены, что хотите удалить этот документ?')) {
+            try {
+                const response = await fetch(`/med_card/document/${documentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const documentItem = button.closest('.document-item');
+                    const visitDateGroup = documentItem.closest('.visit-date-group');
+
+                    // Удаляем элемент документа
+                    documentItem.remove();
+
+                    // Проверяем, остались ли документы в группе
+                    const remainingDocuments = visitDateGroup.querySelectorAll('.document-item');
+                    if (remainingDocuments.length === 0) {
+                        // Если документов нет, удаляем всю группу с заголовком даты
+                        visitDateGroup.remove();
+                    }
+
+                    alert('Документ успешно удален');
+                } else {
+                    alert('Ошибка при удалении документа');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при удалении документа');
+            }
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Add hover effect to nav items
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('mouseenter', function() {
                 if (!this.classList.contains('active')) {
@@ -513,28 +664,19 @@
             });
         });
 
-        // Tab switching functionality
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs
                 tabs.forEach(t => t.classList.remove('active'));
-
-                // Add active class to clicked tab
                 tab.classList.add('active');
-
-                // Hide all tab content
                 document.querySelectorAll('.tab-content-item').forEach(content => {
                     content.classList.remove('active');
                 });
-
-                // Show content for selected tab
                 const tabId = tab.getAttribute('data-tab');
                 document.getElementById(tabId + '-content').classList.add('active');
             });
         });
 
-        // History item expansion/collapse
         const historyItems = document.querySelectorAll('.history-item');
         historyItems.forEach(item => {
             const toggleBtn = item.querySelector('.toggle-btn');
