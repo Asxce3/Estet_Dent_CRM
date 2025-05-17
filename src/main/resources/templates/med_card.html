@@ -418,19 +418,308 @@
             /*box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);*/
         }
 
+
+    /*    Логика оплаты */
+        .payment-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1a3c6d;
+        }
+
+        /* Selectors */
+        .selectors {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .category-selector, .payment-type-selector {
+            flex: 1;
+        }
+
+        .category-selector label, .payment-type-selector label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1a3c6d;
+        }
+
+        .category-selector select, .payment-type-selector select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            background: #fafcff;
+            transition: border-color 0.2s ease;
+        }
+
+        .category-selector select:focus, .payment-type-selector select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Content Container */
+        .content-container {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .works-list {
+            flex: 1;
+            background: #fafcff;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        /* Works Scroll Container */
+        .works-scroll-container {
+            height: 150px; /* Fixed height for ~3 work items */
+            overflow-y: auto;
+            margin-bottom: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: #a3bffa #e6eef8;
+        }
+
+        .works-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .works-scroll-container::-webkit-scrollbar-track {
+            background: #e6eef8;
+            border-radius: 4px;
+        }
+
+        .works-scroll-container::-webkit-scrollbar-thumb {
+            background: #a3bffa;
+            border-radius: 4px;
+        }
+
+        .works-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #93c5fd;
+        }
+
+        /* Work Items */
+        .work-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e6eef8;
+            transition: background 0.2s ease;
+        }
+
+        .work-item:hover {
+            background: #f1f5f9;
+        }
+
+        .work-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+        }
+
+        .work-item label {
+            flex: 1;
+            font-size: 15px;
+            color: #1a3c6d;
+        }
+
+        .work-item .price {
+            font-weight: 500;
+            color: #1a3c6d;
+            margin-right: 16px;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* Selected Works */
+        .selected-works {
+            padding: 0;
+            background: none;
+            margin-top: 24px; /* Spacing above table */
+        }
+
+        .selected-works h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a3c6d;
+        }
+
+        .table-scroll-container {
+            height: 190px; /* Fixed height for ~3 rows + header */
+            overflow-y: auto;
+            border-radius: 8px;
+            background: #fafcff;
+            scrollbar-width: thin;
+            scrollbar-color: #a3bffa #e6eef8;
+        }
+
+        .table-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-track {
+            background: #e6eef8;
+            border-radius: 4px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-thumb {
+            background: #a3bffa;
+            border-radius: 4px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #93c5fd;
+        }
+
+        .selected-works table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-height: 142px; /* 3 rows to prevent collapse */
+        }
+
+        .selected-works th, .selected-works td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e6eef8;
+        }
+
+        .selected-works th {
+            background: #e6eef8;
+            font-weight: 600;
+            color: #1a3c6d;
+            text-transform: uppercase;
+            font-size: 13px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .selected-works tr:nth-child(even) {
+            background: #f8fafd;
+        }
+
+        .selected-works tr:hover {
+            background: #f1f5f9;
+        }
+
+        .selected-works .quantity {
+            width: 60px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #d1d9e6;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        .selected-works .quantity:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .selected-works .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .selected-works .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .selected-works td[colspan="5"] {
+            text-align: center;
+            color: #6b7280;
+            padding: 24px;
+            height: 142px; /* Match 3 rows for empty state */
+            vertical-align: middle;
+        }
+
+        /* Total Amount */
+        .total-amount {
+            padding: 16px;
+            background: #f8fafd;
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .total-amount h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3c6d;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-container {
+                flex-direction: column;
+            }
+
+            .selectors {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .works-scroll-container {
+                height: 120px; /* Smaller fixed height for mobile */
+            }
+
+            .selected-works {
+                margin-top: 16px; /* Slightly less spacing on mobile */
+            }
+
+            .selected-works table {
+                font-size: 13px;
+            }
+
+            .selected-works th, .selected-works td {
+                padding: 8px;
+            }
+
+            .table-scroll-container {
+                height: 160px; /* Smaller fixed height for mobile */
+            }
+
+            .selected-works td[colspan="5"] {
+                height: 112px; /* Match 3 rows for mobile */
+            }
+        }
     </style>
 </head>
 <body>
 
 <form class="background_layer" method="POST"  id="upload-form" enctype="multipart/form-data" th:action="@{/med_card}" th:object="${med_card}">
     <div class="tabs">
-        <div class="tab active" data-tab="medcard">Меккарта пациента</div>
+        <div class="tab active" data-tab="medcard">Медкарта пациента</div>
         <div class="tab" data-tab="upload_file">Загрузка файлов</div>
         <div class="tab" data-tab="material">Используемые материалы</div>
+        <div class="tab" data-tab="payment">Оплата</div>    <!--TODO (Самвел) Подумать над названием позже-->
     </div>
 
     <input type="hidden" th:value="${med_card.visits.patient.ID}" id="patient-id">
-
+    <input type="hidden" th:value="${med_card.visits.ID}" id="visit-id">
 
     <div class="tab-content">
         <div id="medcard-content" class="tab-content-item active">
@@ -555,31 +844,368 @@
                 <div id="usedMaterialList"></div>
             </div>
         </div>
+        <div id="payment-content" class="tab-content-item">
+            <div class="payment-container">
+                <h2>Оплата услуг</h2>
+                <div class="selectors">
+                    <div class="category-selector">
+                        <label for="payment-category">Категория услуг:</label>
+                        <select id="payment-category">
+                            <option value="">Выберите категорию</option>
+                        </select>
+                    </div>
+                    <div class="payment-type-selector">
+                        <label for="payment-type">Тип оплаты:</label>
+                        <select id="payment-type">
+                            <option value="">Выберите тип оплаты</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div class="works-list" id="works-list">
+                        <div class="works-scroll-container" id="works-scroll-container">
+                            <!-- Work items will be populated dynamically -->
+                        </div>
+                        <div class="selected-works" id="selected-works">
+                            <h3>Выбранные услуги</h3>
+                            <div class="table-scroll-container">
+                                <table id="selected-works-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Название директории</th>
+                                        <th>Название работы</th>
+                                        <th>Цена за единицу</th>
+                                        <th>Кол-во</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="total-amount">
+                    <h3>Итого: <span id="total-price">0</span> ₸</h3>
+                </div>
+            </div>
+        </div>
     </div>
 
 </form>
+<script th:src="@{/js/med_card/switchTabs.js}"></script>
+<!--<script src="/static/js/med_card/switchTabs.js"></script>-->
 
 <script>
-    // Логика переключения вкладок
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all tabs
-            tabs.forEach(t => t.classList.remove('active'));
 
-            // Add active class to clicked tab
-            tab.classList.add('active');
+    // Логика Оплаты
+    // Элементы DOM
+    const categorySelect = document.getElementById('payment-category');
+    const paymentTypeSelect = document.getElementById('payment-type');
+    const worksScrollContainer = document.getElementById('works-scroll-container');
+    const selectedWorksTable = document.getElementById('selected-works-table').querySelector('tbody');
+    const totalPriceElement = document.getElementById('total-price');
+    const saveButton = document.getElementById('save-payment');
 
-            // Hide all tab content
-            document.querySelectorAll('.tab-content-item').forEach(content => {
-                content.classList.remove('active');
+    // Объект для хранения выбранных работ и их количества
+    let selectedWorks = {};
+    let selectedPaymentType = null;
+    let directories = [];
+    let paymentTypes = [];
+    const paymentURL = '/payment';
+    const visitId = document.getElementById('visit-id').value;
+
+    // API для получения директорий
+    async function fetchDirectories() {
+        try {
+            const response = await fetch(`${paymentURL}/finance`);
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            }
+            throw new Error(`Ошибка с кодом ${response.status}`);
+        } catch (error) {
+            console.error('Error fetching directories:', error);
+            alert('Ошибка загрузки данных директорий. Проверьте консоль.');
+            return [];
+        }
+    }
+
+    // API для получения типов оплаты
+    async function fetchPaymentTypes() {
+        try {
+            const response = await fetch(`${paymentURL}/types`);
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            }
+            throw new Error(`Ошибка с кодом ${response.status}`);
+        } catch (error) {
+            console.error('Error fetching payment types:', error);
+            alert('Ошибка загрузки типов оплаты. Проверьте консоль.');
+            return [];
+        }
+    }
+
+    // Инициализация категорий
+    async function initCategories() {
+        try {
+            directories = await fetchDirectories();
+            categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
+            directories.forEach(dir => {
+                const option = document.createElement('option');
+                option.value = dir.id;
+                option.textContent = dir.name;
+                categorySelect.appendChild(option);
             });
+        } catch (error) {
+            console.error('Error initializing categories:', error);
+        }
+    }
 
-            // Show content for selected tab
-            const tabId = tab.getAttribute('data-tab');
-            document.getElementById(tabId + '-content').classList.add('active');
-        });
+    // Инициализация типов оплаты
+    async function initPaymentTypes() {
+        try {
+            paymentTypes = await fetchPaymentTypes();
+            paymentTypeSelect.innerHTML = '<option value="">Выберите тип оплаты</option>';
+            paymentTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.textContent = type.name;
+                paymentTypeSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error initializing payment types:', error);
+        }
+    }
+
+    // Функция рендеринга списка работ
+    function renderWorks(categoryId) {
+        try {
+            worksScrollContainer.innerHTML = '';
+            if (!categoryId) return;
+            const directory = directories.find(dir => dir.id === parseInt(categoryId));
+            if (!directory) return;
+
+            directory.financeValueList.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'work-item';
+                div.dataset.category = categoryId;
+                div.innerHTML = `
+                        <input type="checkbox" id="work-${item.id}" value="${item.id}">
+                        <label for="work-${item.id}"><span class="category-name">${directory.name}</span>: ${item.name}</label>
+                        <span class="price" data-price="${item.price}">${item.price} ₽</span>
+                    `;
+                worksScrollContainer.appendChild(div);
+            });
+            updateCheckboxListeners();
+        } catch (error) {
+            console.error('Error in renderWorks:', error);
+        }
+    }
+
+    // Функция обновления таблицы выбранных работ
+    function updateSelectedWorks() {
+        try {
+            selectedWorksTable.innerHTML = '';
+            if (Object.keys(selectedWorks).length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="5">Нет выбранных услуг</td>';
+                selectedWorksTable.appendChild(row);
+            } else {
+                Object.entries(selectedWorks).forEach(([workId, data]) => {
+                    const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+                    if (!workItem) {
+                        console.warn(`Work item with ID ${workId} not found`);
+                        return;
+                    }
+                    const label = workItem.nextElementSibling.textContent;
+                    const categoryName = label.split(': ')[0];
+                    const workName = label.split(': ')[1] || 'Unknown';
+                    const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${categoryName}</td>
+                            <td>${workName}</td>
+                            <td>${price} ₽</td>
+                            <td><input type="number" class="quantity" id="selected-quantity-${workId}" min="1" value="${data.quantity}"></td>
+                            <td><button class="delete-btn" data-work-id="${workId}">Удалить</button></td>
+                        `;
+                    selectedWorksTable.appendChild(row);
+                });
+            }
+            updateQuantityListenersForSelected();
+            updateDeleteListeners();
+            updateTotalPrice();
+        } catch (error) {
+            console.error('Error in updateSelectedWorks:', error);
+        }
+    }
+
+    // Обновление общей суммы
+    function updateTotalPrice() {
+        try {
+            const total = Object.entries(selectedWorks).reduce((sum, [workId, data]) => {
+                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+                if (!workItem) return sum;
+                const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
+                return sum + price * data.quantity;
+            }, 0);
+            totalPriceElement.textContent = total.toLocaleString();
+        } catch (error) {
+            console.error('Error in updateTotalPrice:', error);
+        }
+    }
+
+    // Обработчики событий для чекбоксов
+    function updateCheckboxListeners() {
+        try {
+            const checkboxes = worksScrollContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.removeEventListener('change', checkbox._changeHandler);
+                checkbox._changeHandler = () => {
+                    const workId = parseInt(checkbox.value);
+                    if (checkbox.checked) {
+                        selectedWorks[workId] = { quantity: 1 }; // Default quantity
+                    } else {
+                        delete selectedWorks[workId];
+                    }
+                    updateSelectedWorks();
+                };
+                checkbox.addEventListener('change', checkbox._changeHandler);
+            });
+        } catch (error) {
+            console.error('Error in updateCheckboxListeners:', error);
+        }
+    }
+
+    // Обработчики событий для полей количества в таблице
+    function updateQuantityListenersForSelected() {
+        try {
+            const quantityInputs = selectedWorksTable.querySelectorAll('.quantity');
+            quantityInputs.forEach(input => {
+                input.removeEventListener('input', input._inputHandler);
+                input._inputHandler = () => {
+                    const workId = parseInt(input.id.replace('selected-quantity-', ''));
+                    const quantity = parseInt(input.value);
+                    if (quantity >= 1 && selectedWorks[workId]) {
+                        selectedWorks[workId].quantity = quantity;
+                        updateTotalPrice();
+                    }
+                };
+                input.addEventListener('input', input._inputHandler);
+            });
+        } catch (error) {
+            console.error('Error in updateQuantityListenersForSelected:', error);
+        }
+    }
+
+    // Обработчики событий для кнопок удаления
+    function updateDeleteListeners() {
+        try {
+            const deleteButtons = selectedWorksTable.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.removeEventListener('click', button._clickHandler);
+                button._clickHandler = () => {
+                    const workId = parseInt(button.dataset.workId);
+                    const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+                    if (workItem) {
+                        workItem.checked = false;
+                    }
+                    delete selectedWorks[workId];
+                    updateSelectedWorks();
+                };
+                button.addEventListener('click', button._clickHandler);
+            });
+        } catch (error) {
+            console.error('Error in updateDeleteListeners:', error);
+        }
+    }
+
+    // Обработчик изменения категории
+    categorySelect.addEventListener('change', () => {
+        try {
+            const categoryId = categorySelect.value;
+            renderWorks(categoryId);
+        } catch (error) {
+            console.error('Error in categorySelect change handler:', error);
+        }
     });
+
+    // Обработчик изменения типа оплаты
+    paymentTypeSelect.addEventListener('change', () => {
+        try {
+            const typeId = paymentTypeSelect.value;
+            const selectedType = paymentTypes.find(type => type.id === parseInt(typeId));
+            selectedPaymentType = selectedType ? { id: typeId, name: selectedType.name } : null;
+        } catch (error) {
+            console.error('Error in paymentTypeSelect change handler:', error);
+        }
+    });
+
+    async function createPayment() {
+        try {
+            // Валидация
+            if (Object.keys(selectedWorks).length === 0) {
+                alert('Выберите хотя бы одну услугу.');
+                return;
+            }
+            if (!selectedPaymentType) {
+                alert('Выберите тип оплаты.');
+                return;
+            }
+
+            // Формирование financeValuePayments
+            const financeValuePayments = Object.entries(selectedWorks).map(([workId, data]) => {
+                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+                if (!workItem) return null;
+                return {
+                    id: null,
+                    financeValueId: parseInt(workId),
+                    count: data.quantity
+                };
+            }).filter(item => item !== null);
+
+            // Вычисление общей суммы
+            const total = Object.entries(selectedWorks).reduce((sum, [workId, data]) => {
+                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+                if (!workItem) return sum;
+                const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
+                return sum + price * data.quantity;
+            }, 0);
+
+            // Формирование PaymentDto
+            const paymentData = {
+                id: null,
+                receiptOfMoney: 0,
+                debt: total.toFixed(2),
+                paymentTypeId: parseInt(selectedPaymentType.id),
+                visitsId: visitId,
+                financeValuePayments: financeValuePayments
+            };
+
+            // POST-запрос
+            const response = await fetch(paymentURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentData)
+            });
+            return response;
+
+        } catch (error) {
+            console.error('Error in createPayment:', error);
+            alert('Ошибка при сохранении. Проверьте консоль.');
+        }
+    }
+
+    // Инициализация
+    try {
+        Promise.all([initCategories(), initPaymentTypes()]).then(() => {
+            updateSelectedWorks();
+        });
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
 
 
     // Логика работы зубов
@@ -797,7 +1423,7 @@
     }
 
 
-    // Логика созранения медкарты
+    // Логика сохранения медкарты
     const medCardURL = '/med_card'
     const documentURL = '/med_card/document/upload'
     async function uploadDocument() {
@@ -828,8 +1454,13 @@
     }
     async function createMedCard() {
         const responseForSaveTeeth = await savePatientTeeth();
+        const responseForPayment = await createPayment();
         if(!responseForSaveTeeth.ok) {
             throw new Error('Не удалось обновить зубы')
+        }
+
+        if(responseForPayment.status !== 201) {
+            throw new Error('Не удалось сохранить счет на оплату')  //TODO подумать над этим позже
         }
         const responseForUploadDocument = await uploadDocument();
 
