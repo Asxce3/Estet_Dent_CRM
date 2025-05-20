@@ -13,6 +13,7 @@ import org.example.test_orm.repository.payment.PaymentRepository;
 import org.example.test_orm.repository.payment.PaymentTypeRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -36,6 +37,65 @@ public class PaymentService {
         }
     }
 
+    public void updatePayment(PaymentDto dto) {
+        try {
+            Payment payment = paymentRepository.findById(dto.getId())
+                    .orElseThrow(()-> new RuntimeException("Object payment with doesn't exist"));
+            BigDecimal newReceiptOfMoney = payment.getReceiptOfMoney().add(dto.getReceiptOfMoney());
+
+            BigDecimal newDebt = payment.getDebt().subtract(dto.getReceiptOfMoney());
+
+            payment.setDebt(newDebt);
+            payment.setReceiptOfMoney(newReceiptOfMoney);
+
+            paymentRepository.save(payment);
+            log.info("Payment success update");
+        }   catch (Exception e) {
+            log.warn(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<PaymentDto> getPaymentsByPatientId(long id) {
+        List<Payment> payments = paymentRepository.getPaymentsByVisitsPatientID(id);
+        return payments.stream().map(this::mappingPaymentDto).toList();
+    }
+
+    private PaymentDto mappingPaymentDto(Payment payment) {
+        try {
+            PaymentDto paymentDto = new PaymentDto();
+            paymentDto.setId(payment.getId());
+            paymentDto.setDebt(payment.getDebt());
+            paymentDto.setReceiptOfMoney(payment.getReceiptOfMoney());
+            paymentDto.setVisitsId(payment.getVisits().getID());
+            paymentDto.setFinanceValuePayments(
+                    payment.getFinanceValuePayments().stream()
+                    .map(this::mappingFinanceValuePaymentDto).toList()
+            );
+            paymentDto.setPaymentTypeId(payment.getPaymentType().getId());
+            return paymentDto;
+
+        }   catch (Exception e) {
+            log.warn(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    private FinanceValuePaymentDto mappingFinanceValuePaymentDto(FinanceValuePayment financeValuePayment) {
+        try {
+            FinanceValuePaymentDto dto = new FinanceValuePaymentDto();
+            dto.setId(financeValuePayment.getId());
+            dto.setCount(financeValuePayment.getCount());
+            dto.setFinanceValueId(financeValuePayment.getFinanceValue().getId());
+            return dto;
+
+        }   catch (Exception e) {
+            log.warn(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
     private Payment mappingPayment(PaymentDto dto) {
         try {
             Payment payment = new Payment();

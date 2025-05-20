@@ -23,9 +23,8 @@ inputs.forEach(input => {
 
 form.addEventListener('submit', (e) => {
     const phoneInput = document.getElementById('phone');
-
     // Добавляем + перед значением номера
-    phoneInput.value = '+' + phoneMask.unmaskedValue;
+    phoneInput.value = '+7' + phoneMask.unmaskedValue;
 
     // Форма отправляется дальше
 });

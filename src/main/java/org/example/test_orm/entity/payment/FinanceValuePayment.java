@@ -12,7 +12,7 @@ public class FinanceValuePayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private FinanceValue financeValue;
 
     @ManyToOne

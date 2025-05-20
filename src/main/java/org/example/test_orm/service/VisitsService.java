@@ -26,6 +26,12 @@ public class VisitsService {
         return visitsRepository.findVisitsByPatientID(patientId);
     }
 
+    public List<VisitsDTO> getPatientVisitsDTO(long patientId) {
+        return visitsRepository.findVisitsByPatientID(patientId).stream().map(this::getVisitDTO).toList();
+    }
+
+
+
     public List<Visits> getVisits(LocalDate startWeek, Doctor doctor) {
         return visitsRepository.
                 findByPatientDoctorAndDateOfVisitBetweenAndStatusVisit

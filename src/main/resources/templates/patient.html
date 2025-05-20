@@ -467,6 +467,8 @@
             margin: 15px 0;
         }
     </style>
+        <link rel="stylesheet" th:href="@{/css/payment/PatientPayment.css}">
+
 </head>
 <body>
 <div class="app-container">
@@ -512,6 +514,7 @@
     <main>
         <div class="patient-info">
             <div class="personal-info">
+                <input type="hidden" th:value="${patient.ID}" id="patient_id">
                 <h2>Пациент: <span th:text="${patient.name}">Виталий Аносыкин</span></h2>
                 <p>
                     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
@@ -576,8 +579,15 @@
                 </div>
 
                 <div id="finances-content" class="tab-content-item">
-                    <h3>Финансовая информация</h3>
-                    <p>Здесь будет отображаться финансовая информация пациента.</p>
+                    <div id="payment-list"></div>
+
+                    <div class="payment-modal" id="paymentModal">
+                        <div class="payment-modal-content">
+                            <input type="number" id="paymentAmount" placeholder="Сумма оплаты">
+                            <button onclick="submitPayment()">Подтвердить оплату</button>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div id="documents-content" class="tab-content-item">
@@ -605,8 +615,11 @@
         </div>
     </main>
 </div>
+<script th:src="@{/js/payment/PatientPayment.js}"></script>
 
 <script>
+
+    // Логика работы отображения телефона
     function formatPhoneNumber(phone) {
         const digits = phone.replace(/\D/g, '');
         const number = digits.slice(1);
@@ -615,6 +628,8 @@
 
     let phone = document.getElementById('phone')
     phone.textContent = formatPhoneNumber(phone.textContent)
+
+    // Логика документов
     const documentDownloadURI = '/document/download';
 
     async function viewDocument(button) {
@@ -728,6 +743,7 @@
         }
     }
 
+    // Логика переключения вкладок
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('mouseenter', function() {
