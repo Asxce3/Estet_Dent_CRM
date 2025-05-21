@@ -90,6 +90,15 @@ public class VisitsService {
     public void createVisits(VisitsDTO visitsDTO) {
         try {
             if(checkTime(visitsDTO.getStartVisit(), visitsDTO.getFinishVisit())) {
+
+                int visitsSize = visitsRepository.findVisitByDateTimeRange(
+                        visitsDTO.getDateOfVisit(),
+                        visitsDTO.getStartVisit(),
+                        visitsDTO.getFinishVisit()).size();
+                if (visitsSize > 0) {
+                    throw new RuntimeException("Выбранное время пересекается с другими визитами");
+                }
+
                 MedHistory medHistory = getMedHistory(visitsDTO.getMedHistoryId());
                 visitsRepository.save(
                         Visits.builder()

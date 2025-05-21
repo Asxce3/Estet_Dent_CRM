@@ -5,9 +5,12 @@ import org.example.test_orm.entity.Patient;
 import org.example.test_orm.entity.StatusVisit;
 import org.example.test_orm.entity.Visits;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,5 +19,14 @@ public interface VisitsRepository extends JpaRepository<Visits, Long> {
     List<Visits> findVisitsByPatientID(long patient_id);
     List<Visits> findByPatientDoctorAndDateOfVisitBetween(Doctor doctor, LocalDate startWeek, LocalDate finishWeek);
     List<Visits> findByPatientDoctorAndDateOfVisitBetweenAndStatusVisit(Doctor doctor, LocalDate startWeek, LocalDate finishWeek, StatusVisit statusVisit);
+
+
+    @Query("SELECT v FROM Visits v WHERE v.dateOfVisit = :dateOfVisit" +
+            " AND (:start < v.startVisit AND v.startVisit < :finish)" +
+            " OR (:start < v.finishVisit AND v.finishVisit < :finish)")
+
+    List<Visits> findVisitByDateTimeRange(@Param("dateOfVisit") LocalDate dateOfVisit,
+                                          @Param("start") LocalTime startOfVisit,
+                                          @Param("finish") LocalTime finishOfVisit);
 
 }
