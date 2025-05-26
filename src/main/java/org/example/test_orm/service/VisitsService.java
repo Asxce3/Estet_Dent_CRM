@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.test_orm.DTO.VisitsDTO;
 import org.example.test_orm.entity.*;
+import org.example.test_orm.exception.Visits.CreateVisitException;
 import org.example.test_orm.repository.MedHistoryRepository;
 import org.example.test_orm.repository.VisitsRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -72,7 +73,7 @@ public class VisitsService {
 
 
     public void updateVisits(VisitsDTO visitsDTO) {
-        try{
+        try{    // Добавить проверку времени и при обновлении 
             if(checkTime(visitsDTO.getStartVisit(), visitsDTO.getFinishVisit())) {
                 Visits visits = getVisit(visitsDTO.getId());
                 visits.setDateOfVisit(visitsDTO.getDateOfVisit());
@@ -91,12 +92,14 @@ public class VisitsService {
         try {
             if(checkTime(visitsDTO.getStartVisit(), visitsDTO.getFinishVisit())) {
 
-                int visitsSize = visitsRepository.findVisitByDateTimeRange(
+                List<Visits> overlapping = visitsRepository.findOverlappingVisits(
                         visitsDTO.getDateOfVisit(),
                         visitsDTO.getStartVisit(),
-                        visitsDTO.getFinishVisit()).size();
-                if (visitsSize > 0) {
-                    throw new RuntimeException("Выбранное время пересекается с другими визитами");
+                        visitsDTO.getFinishVisit());
+
+
+                if (!overlapping.isEmpty()) {
+                    throw new CreateVisitException("Визит пересекается с уже существующим визитом");
                 }
 
                 MedHistory medHistory = getMedHistory(visitsDTO.getMedHistoryId());

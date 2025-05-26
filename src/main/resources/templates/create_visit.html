@@ -95,6 +95,9 @@
 </head>
 <body>
 <div class="form-container">
+    <div th:if="${error_message}" style="color:red;">
+        <p th:text="${error_message}"></p>
+    </div>
     <h2>Создание записи</h2>
     <a href="/patients/create" class="create-patient-btn">Создать пациента</a>
     <form id="appointment-form" th:action="@{/visits}" th:object="${visit}" method="post">

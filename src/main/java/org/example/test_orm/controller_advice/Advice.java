@@ -1,8 +1,11 @@
 package org.example.test_orm.controller_advice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.test_orm.DTO.VisitsDTO;
 import org.example.test_orm.exception.*;
+import org.example.test_orm.exception.Visits.CreateVisitException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -10,6 +13,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 @Slf4j
 public class Advice {
+
+    @ExceptionHandler(CreateVisitException.class)
+    public String errorMessageFromDataBase(CreateVisitException e, Model model) {
+        log.warn(e.getClass().toString(), e);
+        model.addAttribute("error_message",  e.getMessage());
+        model.addAttribute("visit", new VisitsDTO());   // TODO по хорошему редиректить с добавление ошибки а не создать по новой шаблон
+
+        return "create_visit";
+    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String errorMessageFromDataBase(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {

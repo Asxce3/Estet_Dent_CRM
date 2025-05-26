@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/static_page_content/header.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="nav-items">
+        <a href="#" class="nav-item company-logo">
+            <svg class="nav-icon dent-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm4 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm4 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+            </svg>
+            <span>DENT</span>
+        </a>
+        <a href="/visits" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            Расписание
+        </a>
+        <a href="/patients" class="nav-item ">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            Пациенты
+        </a>
+        <a href="/finance/page/clinic" class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            Отчет
+        </a>
+        <a href="/materials" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Материалы
+        </a>
+    </div>
+    <div class="nav-profile">
+        <span>Doctor</span>
+        <button class="profile-btn">👤</button>
+    </div>
+</nav>
+<!-- Tabs Navigation -->
+<div class="flex border-b border-gray-200">
+    <button id="clinic-tab" class="px-4 py-2 font-medium text-gray-700 border-b-2 border-blue-500 focus:outline-none clinic-tab">Клиника</button>
+    <button id="patient-tab" class="px-4 py-2 font-medium text-gray-700 border-b-2 border-transparent hover:border-gray-300 focus:outline-none patient-tab">Пациент</button>
+</div>
+
+<!-- Clinic Tab Content -->
+<div id="clinic-content" class="tab-content mt-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Клиника</h2>
+    <div class="mb-4">
+        <label for="clinic-time-range" class="mr-2">Выберите период:</label>
+        <select id="clinic-time-range" class="border border-gray-300 rounded p-1">
+            <option value="all" selected>За всё время</option>
+            <option value="custom">Ручная выборка</option>
+        </select>
+    </div>
+    <div id="clinic-date-range" class="mb-4 hidden">
+        <label for="clinic-start-date" class="mr-2">Дата начала:</label>
+        <input type="date" id="clinic-start-date" class="border border-gray-300 rounded p-1 mr-4">
+        <label for="clinic-end-date" class="mr-2">Дата конца:</label>
+        <input type="date" id="clinic-end-date" class="border border-gray-300 rounded p-1">
+    </div>
+    <div class="mb-4">
+        <button id="clinic-print-button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">Распечатать</button>
+    </div>
+    <div id="clinic-error" class="text-red-500 mb-4 hidden"></div>
+    <div class="flex flex-row space-x-4">
+        <div class="w-1/3">
+            <canvas id="clinic-revenues"></canvas>
+        </div>
+        <div class="w-1/3">
+            <canvas id="clinic-debts"></canvas>
+        </div>
+        <div class="w-1/3">
+            <canvas id="clinic-expenses"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Patient Tab Content -->
+<div id="patient-content" class="tab-content mt-4 hidden">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Пациент</h2>
+    <div class="mb-4 relative">
+        <label for="patient-search" class="mr-2">Поиск пациента:</label>
+        <input type="text" id="patient-search" class="border border-gray-300 rounded p-1 w-64" placeholder="Введите имя пациента" oninput="searchPatient()">
+        <div id="patient-search-results" class="absolute z-10 w-64 bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto hidden">
+            <!-- Search results will be populated here -->
+        </div>
+    </div>
+    <div id="patient-error" class="text-red-500 mb-4 hidden"></div>
+    <div id="patient-controls" class="hidden">
+        <div class="mb-4">
+            <label for="patient-time-range" class="mr-2">Выберите период:</label>
+            <select id="patient-time-range" class="border border-gray-300 rounded p-1">
+                <option value="all" selected>За всё время</option>
+                <option value="custom">Ручной диапозон</option>
+            </select>
+        </div>
+        <div id="patient-date-range" class="mb-4 hidden">
+            <label for="patient-start-date" class="mr-2">Дата начала:</label>
+            <input type="date" id="patient-start-date" class="border border-gray-300 rounded p-1 mr-4">
+            <label for="patient-end-date" class="mr-2">Дата конца:</label>
+            <input type="date" id="patient-end-date" class="border border-gray-300 rounded p-1">
+        </div>
+        <div class="mb-4">
+            <button id="patient-print-button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">Распечатать</button>
+        </div>
+        <div class="flex flex-row space-x-4">
+            <div class="w-1/3">
+                <canvas id="patient-revenues"></canvas>
+            </div>
+            <div class="w-1/3">
+                <canvas id="patient-debts"></canvas>
+            </div>
+            <div class="w-1/3">
+                <canvas id="patient-expenses"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const clinicRevenues = document.getElementById('clinic-revenues');
+    const clinicDebts = document.getElementById('clinic-debts');
+    const clinicExpenses = document.getElementById('clinic-expenses');
+    const clinicTimeRange = document.getElementById('clinic-time-range');
+    const clinicDateRange = document.getElementById('clinic-date-range');
+    const clinicStartDate = document.getElementById('clinic-start-date');
+    const clinicEndDate = document.getElementById('clinic-end-date');
+    const clinicPrintButton = document.getElementById('clinic-print-button');
+    const clinicError = document.getElementById('clinic-error');
+
+    const patientRevenues = document.getElementById('patient-revenues');
+    const patientDebts = document.getElementById('patient-debts');
+    const patientExpenses = document.getElementById('patient-expenses');
+    const patientTimeRange = document.getElementById('patient-time-range');
+    const patientDateRange = document.getElementById('patient-date-range');
+    const patientStartDate = document.getElementById('patient-start-date');
+    const patientEndDate = document.getElementById('patient-end-date');
+    const patientPrintButton = document.getElementById('patient-print-button');
+    const patientSearch = document.getElementById('patient-search');
+    const patientSearchResults = document.getElementById('patient-search-results');
+    const patientControls = document.getElementById('patient-controls');
+    const patientError = document.getElementById('patient-error');
+
+    let clinicRevenueChart, clinicDebtChart, clinicExpenseChart;
+    let patientRevenueChart, patientDebtChart, patientExpenseChart;
+    let patients = [];
+    let selectedPatientId = null;
+
+    const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
+    function searchPatient() {
+        let x = document.getElementById("patient-search").value;
+        if (x.length > 0) {
+            fetchPatients(x);
+        } else {
+            document.getElementById("patient-search-results").innerHTML = "";
+        }
+    }
+
+    async function fetchPatients(name) {
+        try {
+            const response = await fetch('/patients/search?name=' + name);
+            if (!response.ok) throw new Error('Failed to fetch patients');
+            patients = await response.json();
+        } catch (error) {
+            patientError.textContent = 'Ошибка загрузки списка пациентов: ' + error.message;
+            patientError.classList.remove('hidden');
+        }
+    }
+
+    // Fetch financial data from server
+    async function fetchFinanceData(patientId = null) {
+        try {
+            const url = patientId ? `http://localhost:8080/finance/patient/${patientId}` : 'http://localhost:8080/finance/clinic';
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch financial data');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            const errorElement = patientId ? patientError : clinicError;
+            errorElement.textContent = 'Ошибка загрузки финансовых данных: ' + error.message;
+            errorElement.classList.remove('hidden');
+            return [];
+        }
+    }
+
+    function filterDataByDateRange(data, startDate, endDate) {
+        if (!startDate || !endDate) return data;
+        return data.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+        });
+    }
+
+    function processData(filteredData) {
+        const dataMap = new Map();
+        filteredData.forEach(item => {
+            let objectDate = new Date(item.date);
+            let key = months[objectDate.getMonth()];
+            if (dataMap.has(key)) {
+                dataMap.get(key).push(item);
+            } else {
+                dataMap.set(key, [item]);
+            }
+        });
+
+        const dataRevenues = new Map();
+        const dataDebts = new Map();
+        const dataExpenses = new Map();
+
+        dataMap.forEach(function(value, key) {
+            let totalMoney = 0;
+            let totalDebt = 0;
+            let totalExpenses = 0;
+            value.forEach(item => {
+                totalMoney += item.receiptOfMoney;
+                totalDebt += item.debt;
+                item.financeMaterialDTOList.forEach(element => {
+                    totalExpenses += element.totalPrice;
+                });
+            });
+            dataRevenues.set(key, totalMoney);
+            dataExpenses.set(key, totalExpenses);
+            dataDebts.set(key, totalDebt);
+        });
+
+        return { dataRevenues, dataDebts, dataExpenses };
+    }
+
+    function createChart(object, type, labelName, map, color) {
+        let labels = Array.from(map.keys());
+        let data = Array.from(map.values());
+        return new Chart(object, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: labelName,
+                    data: data,
+                    backgroundColor: color
+                }]
+            }
+        });
+    }
+
+    async function updateClinicCharts(startDate, endDate) {
+        clinicError.classList.add('hidden');
+        const data = await fetchFinanceData();
+        const filteredData = filterDataByDateRange(data, startDate, endDate);
+        const { dataRevenues, dataDebts, dataExpenses } = processData(filteredData);
+
+        if (clinicRevenueChart) clinicRevenueChart.destroy();
+        if (clinicDebtChart) clinicDebtChart.destroy();
+        if (clinicExpenseChart) clinicExpenseChart.destroy();
+
+        clinicRevenueChart = createChart(clinicRevenues, 'bar', 'Доходы', dataRevenues, 'rgba(16, 185, 129, 0.6)');
+        clinicDebtChart = createChart(clinicDebts, 'bar', 'Долги', dataDebts, 'rgba(255, 99, 132, 0.6)');
+        clinicExpenseChart = createChart(clinicExpenses, 'bar', 'Расходы на материалы ', dataExpenses, 'rgba(126, 185, 19, 0.6)');
+    }
+
+    async function updatePatientCharts(startDate, endDate) {
+        if (!selectedPatientId) return;
+        patientError.classList.add('hidden');
+        const data = await fetchFinanceData(selectedPatientId);
+        const filteredData = filterDataByDateRange(data, startDate, endDate);
+        const { dataRevenues, dataDebts, dataExpenses } = processData(filteredData);
+
+        if (patientRevenueChart) patientRevenueChart.destroy();
+        if (patientDebtChart) patientDebtChart.destroy();
+        if (patientExpenseChart) patientExpenseChart.destroy();
+
+        patientRevenueChart = createChart(patientRevenues, 'bar', 'Доходы ', dataRevenues, 'rgba(16, 185, 129, 0.6)');
+        patientDebtChart = createChart(patientDebts, 'bar', 'Долги', dataDebts, 'rgba(255, 99, 132, 0.6)');
+        patientExpenseChart = createChart(patientExpenses, 'bar', 'Расходы на материалы', dataExpenses, 'rgba(126, 185, 19, 0.6)');
+    }
+
+    // Patient search functionality
+    function updateSearchResults(query) {
+        patientSearchResults.innerHTML = '';
+        if (query.trim() === '') {
+            patientSearchResults.classList.add('hidden');
+            patientControls.classList.add('hidden');
+            return;
+        }
+
+        const filteredPatients = patients.filter(patient =>
+            patient.name.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if (filteredPatients.length === 0) {
+            patientSearchResults.innerHTML = '<div class="p-2 text-gray-500">Нет совпадений</div>';
+        } else {
+            filteredPatients.forEach(patient => {
+                const div = document.createElement('div');
+                div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                div.textContent = patient.name;
+                div.addEventListener('click', () => {
+                    patientSearch.value = patient.name;
+                    selectedPatientId = patient.id;
+                    patientSearchResults.classList.add('hidden');
+                    patientControls.classList.remove('hidden');
+                    patientTimeRange.value = 'all';
+                    patientDateRange.classList.add('hidden');
+                    patientStartDate.value = '';
+                    patientEndDate.value = '';
+                    updatePatientCharts();
+                });
+                patientSearchResults.appendChild(div);
+            });
+        }
+        patientSearchResults.classList.remove('hidden');
+    }
+
+    patientSearch.addEventListener('input', () => {
+        updateSearchResults(patientSearch.value);
+    });
+
+    // Hide search results when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!patientSearch.contains(e.target) && !patientSearchResults.contains(e.target)) {
+            patientSearchResults.classList.add('hidden');
+        }
+    });
+
+
+    // Initial chart rendering for clinic
+    updateClinicCharts();
+
+    // Clinic time range selection
+    clinicTimeRange.addEventListener('change', () => {
+        if (clinicTimeRange.value === 'custom') {
+            clinicDateRange.classList.remove('hidden');
+        } else {
+            clinicDateRange.classList.add('hidden');
+            updateClinicCharts();
+        }
+    });
+
+    // Clinic date range input handling
+    clinicStartDate.addEventListener('change', () => {
+        if (clinicStartDate.value && clinicEndDate.value) {
+            updateClinicCharts(clinicStartDate.value, clinicEndDate.value);
+        }
+    });
+
+    clinicEndDate.addEventListener('change', () => {
+        if (clinicStartDate.value && clinicEndDate.value) {
+            updateClinicCharts(clinicStartDate.value, clinicEndDate.value);
+        }
+    });
+
+    // Clinic print button handling
+    clinicPrintButton.addEventListener('click', async () => {
+        let start = patientStartDate.value
+        let finish = patientEndDate.value
+        if (start.length !== 0 && finish.length !== 0) {
+            window.open(`/finance/document/clinic?start=${patientStartDate.value}&finish=${patientEndDate.value}`)
+            return;
+        }
+        window.open('/finance/document/clinic')
+    });
+
+    // Patient time range selection
+    patientTimeRange.addEventListener('change', () => {
+        if (patientTimeRange.value === 'custom') {
+            patientDateRange.classList.remove('hidden');
+        } else {
+            patientDateRange.classList.add('hidden');
+            updatePatientCharts();
+        }
+    });
+
+    // Patient date range input handling
+    patientStartDate.addEventListener('change', () => {
+        if (patientStartDate.value && patientEndDate.value) {
+            updatePatientCharts(patientStartDate.value, patientEndDate.value);
+        }
+    });
+
+    patientEndDate.addEventListener('change', () => {
+        if (patientStartDate.value && patientEndDate.value) {
+            updatePatientCharts(patientStartDate.value, patientEndDate.value);
+        }
+    });
+
+    // Patient print button handling
+    patientPrintButton.addEventListener('click', () => {
+        let start = patientStartDate.value
+        let finish = patientEndDate.value
+        if (start.length !== 0 && finish.length !== 0) {
+            window.open(`/finance/document/patient/${selectedPatientId}?start=${patientStartDate.value}&finish=${patientEndDate.value}`)
+            return;
+        }
+        window.open(`/finance/document/patient/${selectedPatientId}`)
+
+    });
+
+    // Tab Switching Logic
+    const clinicTab = document.getElementById('clinic-tab');
+    const patientTab = document.getElementById('patient-tab');
+    const clinicContent = document.getElementById('clinic-content');
+    const patientContent = document.getElementById('patient-content');
+
+    clinicTab.addEventListener('click', () => {
+        clinicTab.classList.add('border-blue-500');
+        clinicTab.classList.remove('border-transparent', 'hover:border-gray-300');
+        patientTab.classList.remove('border-blue-500');
+        patientTab.classList.add('border-transparent', 'hover:border-gray-300');
+        clinicContent.classList.remove('hidden');
+        patientContent.classList.add('hidden');
+        patientSearchResults.classList.add('hidden');
+    });
+
+    patientTab.addEventListener('click', () => {
+        patientTab.classList.add('border-blue-500');
+        patientTab.classList.remove('border-transparent', 'hover:border-gray-300');
+        clinicTab.classList.remove('border-blue-500');
+        clinicTab.classList.add('border-transparent', 'hover:border-gray-300');
+        patientContent.classList.remove('hidden');
+        clinicContent.classList.add('hidden');
+    });
+
+    // Reset patient tab when switching to it
+    patientTab.addEventListener('click', () => {
+        patientSearch.value = '';
+        patientControls.classList.add('hidden');
+        patientSearchResults.classList.add('hidden');
+        selectedPatientId = null;
+        patientError.classList.add('hidden');
+        if (patientRevenueChart) patientRevenueChart.destroy();
+        if (patientDebtChart) patientDebtChart.destroy();
+        if (patientExpenseChart) patientExpenseChart.destroy();
+    });
+
+</script>
+</body>
+</html>

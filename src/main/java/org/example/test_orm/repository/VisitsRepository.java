@@ -21,12 +21,23 @@ public interface VisitsRepository extends JpaRepository<Visits, Long> {
     List<Visits> findByPatientDoctorAndDateOfVisitBetweenAndStatusVisit(Doctor doctor, LocalDate startWeek, LocalDate finishWeek, StatusVisit statusVisit);
 
 
-    @Query("SELECT v FROM Visits v WHERE v.dateOfVisit = :dateOfVisit" +
-            " AND (:start < v.startVisit AND v.startVisit < :finish)" +
-            " OR (:start < v.finishVisit AND v.finishVisit < :finish)")
+//    @Query("SELECT v FROM Visits v WHERE v.dateOfVisit = :dateOfVisit" +
+//            " AND (:start < v.startVisit AND v.startVisit < :finish)" +
+//            " OR (:start < v.finishVisit AND v.finishVisit < :finish)")
+//
+//    List<Visits> findVisitByDateTimeRange(@Param("dateOfVisit") LocalDate dateOfVisit,
+//                                          @Param("start") LocalTime startOfVisit,
+//                                          @Param("finish") LocalTime finishOfVisit);
 
-    List<Visits> findVisitByDateTimeRange(@Param("dateOfVisit") LocalDate dateOfVisit,
-                                          @Param("start") LocalTime startOfVisit,
-                                          @Param("finish") LocalTime finishOfVisit);
+    @Query("""
+        SELECT v FROM Visits v 
+        WHERE v.dateOfVisit = :date 
+          AND (
+            (:start < v.finishVisit AND :finish > v.startVisit)
+          )
+    """)
+    List<Visits> findOverlappingVisits(@Param("date") LocalDate date,
+                                       @Param("start") LocalTime start,
+                                       @Param("finish") LocalTime finish);
 
 }

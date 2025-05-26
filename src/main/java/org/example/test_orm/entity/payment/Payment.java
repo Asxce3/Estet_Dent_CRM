@@ -21,7 +21,7 @@ public class Payment {
 
     private BigDecimal debt;    // Долг
 
-    @OneToOne
+    @ManyToOne
     private PaymentType paymentType;
 
     @OneToOne

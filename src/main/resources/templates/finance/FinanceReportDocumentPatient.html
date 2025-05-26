@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выписка счета за период - Стоматологическая клиника "Улыбка"</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 10px;
+            line-height: 1.3;
+            background-color: #ffffff;
+            color: #333333;
+        }
+        .container {
+            width: 850px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+        .patient-info, .services, .summary {
+            margin-bottom: 10px;
+        }
+        .patient-info h2, .services h2, .summary h2 {
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 2px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        th, td {
+            border: 1px solid #000000;
+            padding: 4px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        .total, .debt, .profit, .material-cost, .net-profit, .period {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        @media print {
+            body {
+                margin: 0;
+                font-size: 10px;
+            }
+            .container {
+                width: 100%;
+                border: none;
+                padding: 5px;
+            }
+            .patient-info h2, .services h2, .summary h2 {
+                font-size: 12px;
+            }
+            table {
+                font-size: 9px;
+            }
+            .total, .debt, .profit, .material-cost, .net-profit, .period {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="patient-info">
+        <div th:if="${error_message != null}">
+            <p th:text="${error_message}"></p>
+        </div>
+        <div th:if="${error_message == null}">
+            <h2>Данные пациента</h2>
+            <p> <strong>ФИО:</strong> <span th:text="${patient.name}"></span></p>
+            <p> <strong>Адрес:</strong> <span th:text="${patient.address}"></span></p>
+            <p> <strong>Телефон:</strong> <span th:text="${patient.telephoneNumber}"></span></p>
+            <p> <strong>Дата рождения:</strong> <span th:text="${patient.birthDate}"></span></p>
+        </div>
+    </div>
+
+
+    <div class="services">
+        <h2>Перечень услуг и материалов</h2>
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 8%;">Дата</th>
+                <th style="width: 15%;">Услуга</th>
+                <th style="width: 7%;">Кол-во</th>
+                <th style="width: 8%;">Цена за ед. (₸)</th>
+                <th style="width: 8%;">Сумма услуги (₸)</th>
+                <th style="width: 15%;">Материалы</th>
+                <th style="width: 7%;">Кол-во мат.</th>
+                <th style="width: 8%;">Цена мат. (₸)</th>
+                <th style="width: 8%;">Сумма мат. (₸)</th>
+                <th style="width: 8%;">Долг (₸)</th>
+                <th style="width: 8%;">Оплачено (₸)</th>
+            </tr>
+            </thead>
+            <tbody id="services-table"></tbody>
+        </table>
+    </div>
+
+    <div class="summary">
+        <h2>Финансовый итог</h2>
+        <p class="period" id="period">Период: </p>
+        <p class="profit" id="total-revenue">Общая выручка (услуги): 0 ₸</p>
+        <p class="material-cost" id="total-materials">Затраты на материалы: 0 ₸</p>
+        <p class="net-profit" id="net-profit">Чистая прибыль: 0 ₸</p>
+        <p class="debt" id="total-debt">Общий долг пациента: 0 ₸</p>
+        <p class="total" id="total-paid">Оплачено: 0 ₸</p>
+    </div>
+</div>
+
+<script>
+    // Функция форматирования чисел
+    function formatNumber(number) {
+        return number.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    }
+
+    // Вспомогательная функция для создания ячейки
+    function createCell(content) {
+        const cell = document.createElement('td');
+        cell.textContent = content;
+        return cell;
+    }
+
+    // Рендеринг таблицы и итогов
+    function renderData(data) {
+        const tbody = document.getElementById('services-table');
+        let totalRevenue = 0, totalMaterials = 0, totalDebt = 0, totalPaid = 0;
+
+        data.forEach((entry, index) => {
+            const works = entry.financeWorkDTOList;
+            const materials = entry.financeMaterialDTOList;
+            const maxRows = Math.max(works.length, materials.length);
+            const revenue = entry.receiptOfMoney > 0 ? works.reduce((sum, work) => sum + work.totalPrice, 0) : 0;
+
+            totalRevenue += revenue;
+            totalMaterials += materials.reduce((sum, mat) => sum + mat.totalPrice, 0);
+            totalDebt += entry.debt;
+            totalPaid += entry.receiptOfMoney;
+
+            for (let i = 0; i < maxRows; i++) {
+                const row = document.createElement('tr');
+
+                // Дата и rowspan
+                if (i === 0) {
+                    const dateCell = document.createElement('td');
+                    dateCell.setAttribute('rowspan', maxRows);
+                    dateCell.textContent = entry.date;
+                    row.appendChild(dateCell);
+                }
+
+                // Услуга
+                const work = works[i] || {};
+                row.appendChild(createCell(work.name || ''));
+                row.appendChild(createCell(work.count || ''));
+                row.appendChild(createCell(work.price ? formatNumber(work.price) : ''));
+                row.appendChild(createCell(work.totalPrice ? formatNumber(work.totalPrice) : ''));
+
+                // Материалы
+                const material = materials[i] || {};
+                row.appendChild(createCell(material.name || ''));
+                row.appendChild(createCell(material.count || ''));
+                row.appendChild(createCell(material.price ? formatNumber(material.price) : ''));
+                row.appendChild(createCell(material.totalPrice ? formatNumber(material.totalPrice) : ''));
+
+                // Долг и Оплачено
+                if (i === 0) {
+                    const debtCell = document.createElement('td');
+                    debtCell.setAttribute('rowspan', maxRows);
+                    debtCell.textContent = formatNumber(entry.debt);
+                    row.appendChild(debtCell);
+
+                    const paidCell = document.createElement('td');
+                    paidCell.setAttribute('rowspan', maxRows);
+                    paidCell.textContent = formatNumber(entry.receiptOfMoney);
+                    row.appendChild(paidCell);
+                }
+
+                tbody.appendChild(row);
+            }
+        });
+
+        // Обновление финансового итога
+        document.getElementById('total-revenue').textContent = `Общая выручка (услуги): ${formatNumber(totalRevenue)} ₸`;
+        document.getElementById('total-materials').textContent = `Затраты на материалы: ${formatNumber(totalMaterials)} ₸`;
+        document.getElementById('net-profit').textContent = `Чистая прибыль: ${formatNumber(totalPaid - totalMaterials)} ₸`;
+        document.getElementById('total-debt').textContent = `Общий долг пациента: ${formatNumber(totalDebt)} ₸`;
+        document.getElementById('total-paid').textContent = `Оплачено: ${formatNumber(totalPaid)} ₸`;
+
+        // Обновление периода
+        const dates = data.map(d => d.date);
+        const period = dates.length > 0 ? `${dates[0]} - ${dates[dates.length - 1]}` : 'Не указан';
+        document.getElementById('period').textContent = `Период: ${period}`;
+    }
+
+    async function getData() {
+        const params = new URLSearchParams(window.location.search);
+        const start = params.get('start')
+        const finish = params.get('finish')
+        console.log(start)
+        console.log(finish)
+
+        const path = window.location.pathname.split("/")
+        console.log(path)
+        const patientId = path[path.length - 1]
+        let url = `/finance/patient/${patientId}`
+        if(start != null || finish != null) {
+            url += `?start=${start}&finish=${finish}`
+        }
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch financial data');
+            const data = await response.json();
+            renderData(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    getData()
+
+</script>
+</body>
+</html>

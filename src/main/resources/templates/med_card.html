@@ -906,6 +906,7 @@
     const selectedWorksTable = document.getElementById('selected-works-table').querySelector('tbody');
     const totalPriceElement = document.getElementById('total-price');
     const saveButton = document.getElementById('save-payment');
+    let totalPriceNumber = 0
 
     // Объект для хранения выбранных работ и их количества
     let selectedWorks = {};
@@ -951,6 +952,8 @@
     async function initCategories() {
         try {
             directories = await fetchDirectories();
+            // directories = selectedServices;
+
             categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
             directories.forEach(dir => {
                 const option = document.createElement('option');
@@ -967,6 +970,8 @@
     async function initPaymentTypes() {
         try {
             paymentTypes = await fetchPaymentTypes();
+            // paymentTypes = selectedType;
+
             paymentTypeSelect.innerHTML = '<option value="">Выберите тип оплаты</option>';
             paymentTypes.forEach(type => {
                 const option = document.createElement('option');
@@ -991,13 +996,17 @@
                 const div = document.createElement('div');
                 div.className = 'work-item';
                 div.dataset.category = categoryId;
+
+                const isChecked = selectedWorks.hasOwnProperty(item.id);
+
                 div.innerHTML = `
-                        <input type="checkbox" id="work-${item.id}" value="${item.id}">
-                        <label for="work-${item.id}"><span class="category-name">${directory.name}</span>: ${item.name}</label>
-                        <span class="price" data-price="${item.price}">${item.price} ₽</span>
-                    `;
+        <input type="checkbox" id="work-${item.id}" value="${item.id}" ${isChecked ? 'checked' : ''}>
+        <label for="work-${item.id}"><span class="category-name">${directory.name}</span>: ${item.name}</label>
+        <span class="price" data-price="${item.price}">${item.price} ₸</span>
+    `;
                 worksScrollContainer.appendChild(div);
             });
+
             updateCheckboxListeners();
         } catch (error) {
             console.error('Error in renderWorks:', error);
@@ -1014,23 +1023,19 @@
                 selectedWorksTable.appendChild(row);
             } else {
                 Object.entries(selectedWorks).forEach(([workId, data]) => {
-                    const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
-                    if (!workItem) {
-                        console.warn(`Work item with ID ${workId} not found`);
-                        return;
-                    }
-                    const label = workItem.nextElementSibling.textContent;
-                    const categoryName = label.split(': ')[0];
-                    const workName = label.split(': ')[1] || 'Unknown';
-                    const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
+                    const service = directories
+                        .flatMap(dir => dir.financeValueList.map(item => ({ ...item, categoryName: dir.name })))
+                        .find(item => item.id === parseInt(workId));
+                    if (!service) return;
+
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                            <td>${categoryName}</td>
-                            <td>${workName}</td>
-                            <td>${price} ₽</td>
-                            <td><input type="number" class="quantity" id="selected-quantity-${workId}" min="1" value="${data.quantity}"></td>
-                            <td><button class="delete-btn" data-work-id="${workId}">Удалить</button></td>
-                        `;
+                    <td>${service.categoryName}</td>
+                    <td>${service.name}</td>
+                    <td>${service.price} ₸</td>
+                    <td><input type="number" class="quantity" id="selected-quantity-${workId}" min="1" value="${data.quantity}"></td>
+                    <td><button class="delete-btn" data-work-id="${workId}">Удалить</button></td>
+                `;
                     selectedWorksTable.appendChild(row);
                 });
             }
@@ -1042,20 +1047,24 @@
         }
     }
 
+
     // Обновление общей суммы
     function updateTotalPrice() {
         try {
             const total = Object.entries(selectedWorks).reduce((sum, [workId, data]) => {
-                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
-                if (!workItem) return sum;
-                const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
-                return sum + price * data.quantity;
+                const service = directories
+                    .flatMap(dir => dir.financeValueList)
+                    .find(item => item.id === parseInt(workId));
+                if (!service) return sum;
+                return sum + service.price * data.quantity;
             }, 0);
+            totalPriceNumber = total
             totalPriceElement.textContent = total.toLocaleString();
         } catch (error) {
             console.error('Error in updateTotalPrice:', error);
         }
     }
+
 
     // Обработчики событий для чекбоксов
     function updateCheckboxListeners() {
@@ -1156,30 +1165,30 @@
             }
 
             // Формирование financeValuePayments
-            const financeValuePayments = Object.entries(selectedWorks).map(([workId, data]) => {
-                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
-                if (!workItem) return null;
-                return {
-                    id: null,
-                    financeValueId: parseInt(workId),
-                    count: data.quantity
-                };
-            }).filter(item => item !== null);
+            // const financeValuePayments = Object.entries(selectedWorks).map(([workId, data]) => {
+            //     const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
+            //     if (!workItem) return null;
+            //     return {
+            //         id: null,
+            //         financeValueId: parseInt(workId),
+            //         count: data.quantity
+            //     };
+            // }).filter(item => item !== null);
 
-            // Вычисление общей суммы
-            const total = Object.entries(selectedWorks).reduce((sum, [workId, data]) => {
-                const workItem = worksScrollContainer.querySelector(`#work-${workId}`);
-                if (!workItem) return sum;
-                const price = parseInt(workItem.parentElement.querySelector('.price').dataset.price) || 0;
-                return sum + price * data.quantity;
-            }, 0);
+            const financeValuePayments = Object.entries(selectedWorks).map(([workId, data]) => ({
+                financeValueId: parseInt(workId),
+                count: data.quantity
+            }));
+
+            console.log(JSON.stringify(financeValuePayments))
+
 
             // Формирование PaymentDto
             const paymentData = {
                 id: null,
                 receiptOfMoney: 0,
-                debt: total.toFixed(2),
-                paymentTypeId: parseInt(selectedPaymentType.id),
+                debt: totalPriceNumber,
+                paymentTypeId: Number(selectedPaymentType.id),
                 visitsId: visitId,
                 financeValuePayments: financeValuePayments
             };
@@ -1206,6 +1215,9 @@
     } catch (error) {
         console.error('Error during initialization:', error);
     }
+
+</script>
+<script>
 
 
     // Логика работы зубов
