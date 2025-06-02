@@ -61,7 +61,13 @@ public class Advice {
     private String messageForDuplicateException(String error) {
         int start = error.indexOf("(") + 1;
         int last = error.indexOf(")");
-        return "Поле: " + error.substring(start, last) + " уже существует!";
+        String field = error.substring(start, last);
+
+        if(field.equals("telephone_number")) {
+            return "Такой номер телефона уже существует!";
+
+        }
+        return "Такой: " + error.substring(start, last) + " уже существует!";
     }
 
 }

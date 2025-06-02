@@ -9,7 +9,9 @@
 <body>
 <div class="container">
     <h1>Регистрация пациента</h1>
-    <p id="message" class="message"></p>
+    <div th:if="${error_message != null}">
+        <p th:text="${error_message}"></p>
+    </div>
     <form id="patientForm" action="/patients/create" method="POST">
         <div class="form-group">
             <label for="name">Имя:</label>

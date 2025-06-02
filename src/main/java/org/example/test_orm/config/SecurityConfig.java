@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login", "/register", "/logout",  "/js/**", "/css/**", "/**").permitAll()
+                        .requestMatchers("/login", "/register", "/logout",  "/js/**", "/css/**").permitAll()
                         .anyRequest().hasAnyAuthority("DOCTOR")
                 )
                 .formLogin((form) -> form

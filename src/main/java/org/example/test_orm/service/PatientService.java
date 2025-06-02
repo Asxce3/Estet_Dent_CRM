@@ -6,7 +6,6 @@ import org.example.test_orm.DTO.teeth.TeethDTO;
 import org.example.test_orm.DTO.teeth.ToothConditionDTO;
 import org.example.test_orm.entity.Doctor;
 import org.example.test_orm.entity.Patient;
-import org.example.test_orm.entity.Teeth;
 import org.example.test_orm.exception.CreateDataOfBirthPatientException;
 import org.example.test_orm.exception.PatientNotFoundException;
 import org.example.test_orm.repository.PatientRepository;
@@ -59,7 +58,7 @@ public class PatientService {
                 Patient savedPatient = patientRepository.saveAndFlush(teethService.createPatientTeeth(patient)); // TODO (Самвел) в будущем заменить на тригеры (это костыль)
                 medHistoryService.createMedHistoryPatient(savedPatient);
             }   else {
-                throw new CreateDataOfBirthPatientException("The patient's date of birth cannot be later than the current date.");
+                throw new CreateDataOfBirthPatientException("Дата рождения пациента не должна быть позже текущей");
             }
         }   catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException(e.getMessage());
@@ -67,10 +66,10 @@ public class PatientService {
     }
 
     public void deletePatient(long id) {
-        patientRepository.deleteById(id);
-        if (patientRepository.existsById(id)) {
-            throw new PatientNotFoundException("Patient not deleted!");
-        }
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+
+        patientRepository.delete(patient);
     }
 
 
